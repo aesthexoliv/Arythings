@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "arythings:astryluna_star"
+    },
+    "L": {
+      "item": "arythings:lumit_shard"
+    }
+  },
+  "pattern": [
+    "L L",
+    "LAL",
+    "LLL"
+  ],
+  "result": {
+    "count": 1,
+    "id": "arythings:lumit_chestplate"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "group": "luzzantum_ingot",
+  "ingredient": {
+    "item": "arythings:nether_luzzantum_ore"
+  },
+  "result": {
+    "id": "arythings:luzzantum_ingot"
+  }
+}

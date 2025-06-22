@@ -1,0 +1,4 @@
+// 1.21.1	2025-06-21T21:09:44.258407895	Arya's Mod/Tags for minecraft:block
+ace7be52525a7d3ad4543be266758f4ac8094e1a data/minecraft/tags/block/needs_diamond_tool.json
+9187866d34db695c25f2f5dff517727aedc65738 data/minecraft/tags/block/needs_iron_tool.json
+e2a4750912b540d91fc293db850c85e04f16b766 data/minecraft/tags/block/mineable/pickaxe.json

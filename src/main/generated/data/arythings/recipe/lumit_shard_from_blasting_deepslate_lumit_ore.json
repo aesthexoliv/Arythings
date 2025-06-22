@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.57,
+  "group": "lumit_shard",
+  "ingredient": {
+    "item": "arythings:deepslate_lumit_ore"
+  },
+  "result": {
+    "id": "arythings:lumit_shard"
+  }
+}

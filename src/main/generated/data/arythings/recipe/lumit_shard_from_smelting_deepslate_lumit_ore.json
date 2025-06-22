@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.73,
+  "group": "lumit_shard",
+  "ingredient": {
+    "item": "arythings:deepslate_lumit_ore"
+  },
+  "result": {
+    "id": "arythings:lumit_shard"
+  }
+}

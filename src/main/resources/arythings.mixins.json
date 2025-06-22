@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "net.arclieq.arythings.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"ArythingsMixin",
+		"MaceMixin",
+		"PlayerEntityMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

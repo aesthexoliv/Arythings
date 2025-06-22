@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "arythings:luzzantum_ingot"
+  },
+  "base": {
+    "item": "arythings:broken_luzzantum_chestplate"
+  },
+  "result": {
+    "count": 1,
+    "id": "arythings:luzzantum_chestplate"
+  },
+  "template": {
+    "item": "arythings:astryluna_star"
+  }
+}

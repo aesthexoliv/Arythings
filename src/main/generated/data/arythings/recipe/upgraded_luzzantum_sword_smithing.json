@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "arythings:luzzantum_ingot"
+  },
+  "base": {
+    "item": "arythings:luzzantum_sword"
+  },
+  "result": {
+    "count": 1,
+    "id": "arythings:upgraded_luzzantum_sword"
+  },
+  "template": {
+    "item": "arythings:astryluna_star"
+  }
+}

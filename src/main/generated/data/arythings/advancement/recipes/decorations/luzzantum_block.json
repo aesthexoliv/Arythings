@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_luzzantum_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "arythings:luzzantum_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:luzzantum_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_luzzantum_ingot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:luzzantum_block"
+    ]
+  }
+}

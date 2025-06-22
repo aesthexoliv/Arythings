@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "group": "netiamond",
+  "ingredient": {
+    "item": "arythings:nether_netiamond_ore"
+  },
+  "result": {
+    "id": "arythings:netiamond"
+  }
+}

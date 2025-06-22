@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.6,
+  "group": "mythril_ingot",
+  "ingredient": {
+    "item": "arythings:deepslate_mythril_ore"
+  },
+  "result": {
+    "id": "arythings:mythril_ingot"
+  }
+}

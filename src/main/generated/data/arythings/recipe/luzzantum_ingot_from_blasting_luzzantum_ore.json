@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.5,
+  "group": "luzzantum_ingot",
+  "ingredient": {
+    "item": "arythings:luzzantum_ore"
+  },
+  "result": {
+    "id": "arythings:luzzantum_ingot"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "arythings:astryluna_star"
+  },
+  "base": {
+    "item": "minecraft:shield"
+  },
+  "result": {
+    "count": 1,
+    "id": "arythings:astryluna_shield"
+  },
+  "template": []
+}

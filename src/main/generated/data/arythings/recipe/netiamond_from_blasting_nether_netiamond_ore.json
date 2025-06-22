@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.8,
+  "group": "netiamond",
+  "ingredient": {
+    "item": "arythings:nether_netiamond_ore"
+  },
+  "result": {
+    "id": "arythings:netiamond"
+  }
+}

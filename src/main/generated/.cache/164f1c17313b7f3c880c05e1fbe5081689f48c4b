@@ -1,0 +1,22 @@
+// 1.21.1	2025-06-21T21:09:44.097531995	Arya's Mod/Tags for minecraft:item
+c2093729b96a3847fcdba3eef1eb9b42c1ef4633 data/minecraft/tags/item/trimmable_armor.json
+e94ab680f2c5eb2e3daa7ddab7c0e8d0d5f8e7bb data/minecraft/tags/item/enchantable/durability.json
+f595d83316062ec712f30d43d29d28360b8105f5 data/minecraft/tags/item/enchantable/fire_aspect.json
+c55be3aa074cb712258b13ac5d4ea6a8052ef7f9 data/minecraft/tags/item/enchantable/leg_armor.json
+136828f82c28e2c1b3765744d7c6451724b837f6 data/minecraft/tags/item/enchantable/foot_armor.json
+f782818f5cabf312e20aedc38e7d0d520994f599 data/minecraft/tags/item/pickaxes.json
+136828f82c28e2c1b3765744d7c6451724b837f6 data/minecraft/tags/item/foot_armor.json
+05c67271d75ec9dc8deecefc3baae33eb9a07f1b data/minecraft/tags/item/enchantable/weapon.json
+f01fc9b25973959d93bc375885a43c52d3895a83 data/minecraft/tags/item/enchantable/mining.json
+2a247f5d1b35b6eb00562245d45ec307fd77c1a1 data/minecraft/tags/item/swords.json
+561abf9dc86c08da5db7f4a79541a43153b54287 data/minecraft/tags/item/axes.json
+23be494dbf947283c4fedb6d5c5e4df61eda33be data/minecraft/tags/item/enchantable/head_armor.json
+551720780cae265f4eb28074347b5c381dcd9904 data/minecraft/tags/item/enchantable/chest_armor.json
+f595d83316062ec712f30d43d29d28360b8105f5 data/minecraft/tags/item/enchantable/mace.json
+8da09707335da10281a7684c569e0cc0971f563a data/minecraft/tags/item/shovels.json
+73b8acd10ec03a9bc1e83b828bf7cd974cd84fef data/minecraft/tags/item/hoes.json
+d716d14f738e60c6e01860d81a399ecafc8dfb15 data/minecraft/tags/item/enchantable/sword.json
+551720780cae265f4eb28074347b5c381dcd9904 data/minecraft/tags/item/chest_armor.json
+fdab8ddd5529ae14b26bc1853b004131135318a4 data/arythings/tags/item/transformable_items.json
+c55be3aa074cb712258b13ac5d4ea6a8052ef7f9 data/minecraft/tags/item/leg_armor.json
+23be494dbf947283c4fedb6d5c5e4df61eda33be data/minecraft/tags/item/head_armor.json

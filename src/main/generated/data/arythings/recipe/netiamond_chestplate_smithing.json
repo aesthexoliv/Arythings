@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "arythings:netiamond"
+  },
+  "base": {
+    "item": "arythings:broken_netiamond_chestplate"
+  },
+  "result": {
+    "count": 1,
+    "id": "arythings:netiamond_chestplate"
+  },
+  "template": {
+    "item": "arythings:astryluna_star"
+  }
+}

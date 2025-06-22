@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "arythings",
+	"version": "${version}",
+	"name": "Arya's Mod",
+	"description": "This mod adds new items, blocks, ores, structures, etc!",
+	"authors": [
+		"AryaCQ_"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/arythings/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.arclieq.arythings.Arythings"
+		],
+		"fabric-datagen": [
+			"net.arclieq.arythings.ArythingsDataGenerator"
+		]
+	},
+	"mixins": [
+		"arythings.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.13",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*",
+		"sodium": "~0.6.13",
+		"modmenu": "~11.0.3"
+	}
+}
