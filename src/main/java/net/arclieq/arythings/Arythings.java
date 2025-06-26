@@ -4,6 +4,7 @@ import net.arclieq.arythings.block.ModBlocks;
 import net.arclieq.arythings.item.ModItemGroups;
 import net.arclieq.arythings.item.ModItems;
 import net.arclieq.arythings.util.CounterHelperUtil;
+import net.arclieq.arythings.util.CounterHelperUtil.CounterMode;
 import net.arclieq.arythings.world.gen.ModWorldGeneration;
 import net.arclieq.arythings.command.ModCommands;
 import net.fabricmc.api.ModInitializer;
@@ -17,14 +18,21 @@ import net.minecraft.util.Formatting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-
+import com.google.gson.JsonParser;
+import com.google.gson.JsonArray;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -50,14 +58,18 @@ public class Arythings implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     // Formatting constants for tooltips and messages
-    public static final Formatting 
-        GRAY = Formatting.GRAY, 
-        GREEN = Formatting.GREEN, 
-        RED = Formatting.RED, 
+    public static final Formatting
+        GRAY = Formatting.GRAY,
+        GREEN = Formatting.GREEN,
+        RED = Formatting.RED,
         AQUA = Formatting.AQUA;
 
     // Counter for periodic tick data saving
     private int tickSaveCounter = 0;
+
+    // Global configuration values for getmoditem_settings
+    private static Set<String> blockedItems = new HashSet<>();
+
 
     /**
      * Called when the mod is initialized.
@@ -65,51 +77,96 @@ public class Arythings implements ModInitializer {
      */
     @Override
     public void onInitialize() {
+        LOGGER.info("Loading mod, please wait!");
+        
+        // Load Arythings specific configurations (getmoditem_settings)
+        loadConfig();
+        // Load CounterHelperUtil specific configurations (maxCounterValue, unchangeable_counters)
+        CounterHelperUtil.configureConfig(); // Renamed method call
+
         // Register server lifecycle events
+        LOGGER.debug("Registering server lifecycle events, please wait!");
         ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
         ServerLifecycleEvents.SERVER_STOPPING.register(this::onServerStopping);
         ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
-        LOGGER.debug("Server-side events registered.");
-        LOGGER.debug("Now loading commands and mod context, please wait!");
-
-        LOGGER.info("Mod is loading...");
-        loadConfig();
-        LOGGER.warn("Warning: Possibly buggy/broken mod!");
+        LOGGER.debug("Now loading mod context...");
         registerMod();
-        LOGGER.debug("Loaded all registries.");
         LOGGER.info("Finished!");
     }
 
     /**
-     * Loads the max counter value from config file.
-     * Config file: config/arythings.json
+     * Loads Arythings specific configuration from arythings.json.
+     * This includes blocked_items for /getmoditem command.
      */
-    public static void loadConfig() {
-        LOGGER.info("Loading config...");
-        try {
-            File configFile = Paths.get("config", "arythings.json").toFile();
-            File configDir = configFile.getParentFile();
-            if (!configDir.exists()) {
-                boolean made = configDir.mkdirs();
-                if (!made) {
-                    LOGGER.error("Failed to create config directory: " + configDir.getAbsolutePath());
-                }
+    private static void loadConfig() {
+        // Ensure the config directory exists
+        File configDir = Paths.get("config").toFile();
+        if (!configDir.exists()) {
+            boolean made = configDir.mkdirs();
+            if (!made) {
+                LOGGER.error("Failed to create config directory: " + configDir.getAbsolutePath());
             }
-            if (!configFile.exists()) {
-                JsonObject obj = new JsonObject();
-                obj.addProperty("maxCounterValue", 32767);
-                try {
-                    Files.write(configFile.toPath(), CounterHelperUtil.GSON.toJson(obj).getBytes(), StandardOpenOption.CREATE_NEW);
-                    LOGGER.info("Created config at " + configFile.getAbsolutePath());
-                } catch (IOException e) {
-                    LOGGER.error("Failed to write config: ", e);
-                }
-                CounterHelperUtil.maxCounterValue = 32767;
-            }
-        } catch (Exception e) {
-            LOGGER.error("Error loading config, using default.", e);
-            CounterHelperUtil.maxCounterValue = 32767;
         }
+
+        LOGGER.info("Loading config...");
+        Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+        File configFile = Paths.get("config", "arythings.json").toFile();
+
+        // If file doesn't exist, create it with default structure
+        if (!configFile.exists()) {
+            JsonObject rootObj = new JsonObject();
+            
+            // Default getmoditem_settings
+            JsonObject getModItemSettings = new JsonObject();
+            JsonArray blockedItemsArray = new JsonArray();
+            // Example blocked item: blockedItemsArray.add("minecraft:diamond");
+            blockedItemsArray.add("arythings:luzzantum_ingot"); // Example blocked item for testing
+            getModItemSettings.add("blocked_items", blockedItemsArray);
+            rootObj.add("getmoditem_settings", getModItemSettings);
+
+            try {
+                Files.write(configFile.toPath(), GSON.toJson(rootObj).getBytes(), StandardOpenOption.CREATE_NEW);
+                LOGGER.info("Created default arythings.json.");
+            } catch (IOException e) {
+                LOGGER.error("Failed to write default arythings.json: ", e);
+            }
+        }
+
+        // Read existing config
+        try (FileReader reader = new FileReader(configFile)) {
+            JsonObject config = JsonParser.parseReader(reader).getAsJsonObject();
+
+            // Load getmoditem_settings
+            if (config.has("getmoditem_settings") && config.get("getmoditem_settings").isJsonObject()) {
+                JsonObject getModItemSettings = config.getAsJsonObject("getmoditem_settings");
+                if (getModItemSettings.has("blocked_items") && getModItemSettings.get("blocked_items").isJsonArray()) {
+                    JsonArray blockedItemsArray = getModItemSettings.getAsJsonArray("blocked_items");
+                    blockedItems.clear(); // Clear existing to ensure fresh load
+                    blockedItemsArray.forEach(element -> blockedItems.add(element.getAsString()));
+                } else {
+                    blockedItems.clear();
+                }
+            } else {
+                blockedItems.clear();
+            }
+
+        } catch (IOException e) {
+            LOGGER.error("Error reading arythings.json config file: ", e);
+            blockedItems.clear();
+        } catch (Exception e) {
+            LOGGER.error("Error parsing arythings.json config, using defaults: ", e);
+            blockedItems.clear();
+        }
+    }
+
+    /**
+     * Provides access to the set of blocked item identifiers for /getmoditem command.
+     * Item identifiers are in the format "namespace:path" (e.g., "minecraft:diamond_sword").
+     *
+     * @return an unmodifiable set of blocked item identifiers.
+     */
+    public static Set<String> getBlockedItems() {
+        return Collections.unmodifiableSet(blockedItems);
     }
 
     /**
@@ -122,7 +179,6 @@ public class Arythings implements ModInitializer {
                 ModCommands.registerCommands(dispatcher);
             }
         );
-        LOGGER.debug("Registered commands.");
 
         // On player join, initialize tick counters to 20000 if this is their first join
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
@@ -132,7 +188,6 @@ public class Arythings implements ModInitializer {
             String[] counters = {"luzzantum", "netiamond"};
             boolean isFirstJoin = true;
             // Check if any counter is already set (not first join)
-            LOGGER.debug("Checking if player(s) are first-join...");
             for (String counter : counters) {
                 if (CounterHelperUtil.getCounterValue(uuid, counter, server) != 0) {
                     isFirstJoin = false;
@@ -141,13 +196,11 @@ public class Arythings implements ModInitializer {
             }
             // If first join, set all counters to 20000
             if (isFirstJoin) {
-                LOGGER.debug("First-join player detected, setting counter(s) to starting value!");
                 for (String counter : counters) {
                     CounterHelperUtil.setCounter(uuid, counter, 20000, CounterHelperUtil.CounterMode.TICK, server);
                 }
             }
         });
-        LOGGER.debug("Registered player first-join event.");
 
         // Register custom items
         ModItems.registerModItems();
@@ -164,6 +217,15 @@ public class Arythings implements ModInitializer {
      * Loads tick data from file.
      */
     private void onServerStarted(MinecraftServer server) {
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+            for (String counter : CounterHelperUtil.getAllPlayerCounters().getOrDefault(player.getUuid(), Collections.emptyMap()).keySet()) {
+                // Now using CounterHelperUtil.getMaxCounterValue()
+                if(CounterHelperUtil.getCounterValue(player.getUuid(), counter, server) > CounterHelperUtil.getMaxCounterValue()) {
+                    CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counter);
+                    CounterHelperUtil.setCounter(player.getUuid(), counter, CounterHelperUtil.getMaxCounterValue(), mode, server);
+                }
+            }
+        }
         CounterHelperUtil.loadData(server);
     }
 
@@ -187,6 +249,7 @@ public class Arythings implements ModInitializer {
                 for (Map.Entry<String, CounterHelperUtil.CounterData> entry : counters.entrySet()) {
                     CounterHelperUtil.CounterData data = entry.getValue();
                     if (data.mode == CounterHelperUtil.CounterMode.TICK) {
+                        // Now using CounterHelperUtil.getMaxCounterValue()
                         if(data.value < CounterHelperUtil.getMaxCounterValue()) data.value++;
                     }
                 }
