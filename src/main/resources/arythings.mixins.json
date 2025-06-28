@@ -5,7 +5,8 @@
 	"mixins": [
 		"ArythingsMixin",
 		"MaceMixin",
-		"PlayerEntityMixin"
+		"PlayerEntityMixin",
+		"GiveCommandMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
