@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.Collections; // Added for Collections.unmodifiableSet
+import java.util.Collections;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -168,7 +168,7 @@ public class CounterHelperUtil {
      * Loads player counter data from the world's data directory.
      */
     public static void loadData(MinecraftServer server) {
-        File dataFile = server.getSavePath(WorldSavePath.ROOT).resolve("data").resolve(COUNTERS_DATA_FILE_NAME).toFile();
+        File dataFile = server.getSavePath(WorldSavePath.ROOT).resolve("arythings").resolve(COUNTERS_DATA_FILE_NAME).toFile();
         if (dataFile.exists()) {
             try (FileReader reader = new FileReader(dataFile)) {
                 Type type = new TypeToken<Map<UUID, Map<String, CounterData>>>(){}.getType();
@@ -180,15 +180,14 @@ public class CounterHelperUtil {
             } catch (IOException e) {
                 Arythings.LOGGER.debug("Failed to load player counters data, this is normal if the file is empty/new.", e);
             }
-        } else {
-        }
+        } else {}
     }
 
     /**
      * Saves player counter data to the world's data directory.
      */
     public static void saveData(MinecraftServer server) {
-        File dataDir = server.getSavePath(WorldSavePath.ROOT).resolve("data").toFile();
+        File dataDir = server.getSavePath(WorldSavePath.ROOT).resolve("arythings").toFile();
         if (!dataDir.exists()) {
             dataDir.mkdirs();
         }

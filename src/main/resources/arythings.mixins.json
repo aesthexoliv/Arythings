@@ -4,9 +4,9 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ArythingsMixin",
-		"MaceMixin",
-		"PlayerEntityMixin",
-		"GiveCommandMixin"
+		"ArythingsMixin$MaceMixin",
+		"ArythingsMixin$PlayerEntityMixin",
+		"ArythingsMixin$GiveCommandMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

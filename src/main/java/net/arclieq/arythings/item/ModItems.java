@@ -208,7 +208,7 @@ public class ModItems {
     */
 
     // --- Special Items ---
-     ASTRYLUNA_STAR = registerItem("astryluna_star", new AstrylunaStar(new Item.Settings())),
+     ASTRYLUNA_STAR = registerItem("astryluna_star", new AstrylunaStar(new Item.Settings().rarity(Rarity.EPIC))),
 
      ASTRYLUNA_SHIELD = registerItem("astryluna_shield", new AstrylunaShieldItem(new Item.Settings()
              .maxDamage(794).rarity(Rarity.EPIC)));

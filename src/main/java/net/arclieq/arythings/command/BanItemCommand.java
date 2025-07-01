@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.arclieq.arythings.Arythings;
+import net.arclieq.arythings.util.ConfigManager;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.command.CommandManager;
@@ -34,14 +34,14 @@ public class BanItemCommand {
                     }
                 
                     // Item already banned:
-                    if(Arythings.getBannedItems().contains(itemId.toString())) {
+                    if(ConfigManager.getBannedItems().contains(itemId.toString())) {
                         context.getSource().sendError(Text.literal("Error: Item '").append(Text.literal(itemId.toString().formatted(Formatting.YELLOW))
                             .append(Text.literal("' is already banned!")))); 
                         return 0;
                     }
                     
                     // Ban item:
-                    Arythings.addBannedItemAndSave(itemId.toString(), true, false);
+                    ConfigManager.addBannedItemAndSave(itemId.toString());
                     context.getSource().sendFeedback(() -> Text.literal("Item '").append(Text.literal(itemId.toString()).formatted(Formatting.RED)).append("' is now banned and will be removed from inventories."), true);
                     return 1;
                 })
@@ -54,7 +54,7 @@ public class BanItemCommand {
             .then(CommandManager.argument("item", IdentifierArgumentType.identifier()).suggests(BanItemCommand::suggestBannedItems)
                 .executes(context -> {
                     Identifier itemId = IdentifierArgumentType.getIdentifier(context, "item");
-                    boolean banned = Arythings.getBannedItems().contains(itemId.toString());
+                    boolean banned = ConfigManager.getBannedItems().contains(itemId.toString());
                     boolean itemExists = Registries.ITEM.containsId(itemId);
 
                     // If not banned item:
@@ -76,7 +76,7 @@ public class BanItemCommand {
                     }
 
                     // Banned item unban:
-                    Arythings.removeBannedItemAndSave(itemId.toString());
+                    ConfigManager.removeBannedItemAndSave(itemId.toString());
                     context.getSource().sendFeedback(() -> Text.literal("Item '").append(Text.literal(itemId.toString()).formatted(Formatting.GREEN)).append("' is no longer banned."), true);
                     return 1;
                 })
@@ -86,14 +86,14 @@ public class BanItemCommand {
 
     private static CompletableFuture<Suggestions> suggestBannableItems(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
         Registries.ITEM.stream()
-            .filter(item -> !Arythings.getBannedItems().contains(Registries.ITEM.getId(item).toString()))
+            .filter(item -> !ConfigManager.getBannedItems().contains(Registries.ITEM.getId(item).toString()))
             .map(item -> Registries.ITEM.getId(item).toString())
             .forEach(builder::suggest);
         return builder.buildFuture();
     }
 
     private static CompletableFuture<Suggestions> suggestBannedItems(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
-        for (String s : Arythings.getBannedItems()) {
+        for (String s : ConfigManager.getBannedItems()) {
             if(Registries.ITEM.containsId(Identifier.of(s))) builder.suggest(s);
         }
         return builder.buildFuture();

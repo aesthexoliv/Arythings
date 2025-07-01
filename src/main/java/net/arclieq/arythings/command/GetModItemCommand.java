@@ -11,6 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
 import net.arclieq.arythings.Arythings;
+import net.arclieq.arythings.util.ConfigManager;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -75,7 +76,7 @@ public class GetModItemCommand {
         }
 
         // Check if the item is banned by configuration
-        if (Arythings.getBannedItems().contains(id.toString())) {
+        if (ConfigManager.getBannedItems().contains(id.toString())) {
             source.sendError(Text.literal("This item is banned by server configuration and cannot be given: " + id));
             return 0;
         }
