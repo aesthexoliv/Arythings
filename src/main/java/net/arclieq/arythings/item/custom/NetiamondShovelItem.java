@@ -32,34 +32,33 @@ public class NetiamondShovelItem extends ShovelItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         if(user instanceof ServerPlayerEntity player) {
-        StatusEffectInstance effect = new StatusEffectInstance(StatusEffects.HASTE, 9600, 1, false, true), effect1 = new StatusEffectInstance(StatusEffects.NIGHT_VISION, 9600, 0, false, true);
-        int getCounter = CounterHelperUtil.getCounterValue(player.getUuid(), "netiamond", world.getServer());
-        
-        int seconds = 900 - getCounter / 20;
-		int minutes = seconds / 60;
-		seconds = seconds - (minutes * 60);
+            StatusEffectInstance effect = new StatusEffectInstance(StatusEffects.HASTE, 9600, 1, false, true), effect1 = new StatusEffectInstance(StatusEffects.NIGHT_VISION, 9600, 0, false, true);
+            int getCounter = CounterHelperUtil.getCounterValue(player.getUuid(), "netiamond", world.getServer());
+            int seconds = 900 - getCounter / 20;
+		    int minutes = seconds / 60;
+		    seconds = seconds - (minutes * 60);
 
-        if (!world.isClient() && stack.getItem() == ModItems.NETIAMOND_SHOVEL) {
-            // Holding shift check
-			if (Screen.hasShiftDown()) {
-                // 15m cooldown check
-                if(getCounter >= 18000) {
-                    user.playSound(SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK);
-                    user.addStatusEffect(effect, user);
-                    user.addStatusEffect(effect1, user);
-                    CounterHelperUtil.setCounter(player.getUuid(), "netiamond", 0, CounterMode.TICK, world.getServer());
-                    
-                    ItemUsage.consumeHeldItem(world, user, hand);
-                } else {
+            if (!world.isClient() && stack.getItem() == ModItems.NETIAMOND_SHOVEL) {
+                // Holding shift check
+			    if (Screen.hasShiftDown()) {
+                    // 15m cooldown check
+                    if(getCounter >= 18000) {
+                        user.playSound(SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK);
+                        user.addStatusEffect(effect, user);
+                        user.addStatusEffect(effect1, user);
+                        CounterHelperUtil.setCounter(player.getUuid(), "netiamond", 0, CounterMode.TICK, world.getServer());
+                        ItemUsage.consumeHeldItem(world, user, hand);
+                    } else {
                         user.playSound(SoundEvents.BLOCK_GLASS_BREAK);
                         user.sendMessage(Text.literal("Please wait " + minutes + "m, " + seconds + "s!").formatted(Arythings.RED), true);
                         Arythings.LOGGER.debug("Netiamond Shovel -- " + getCounter + " ticks has passed.");
-                }
-			}
-        }
+                    }
+			    }
+            }
         }
         return TypedActionResult.fail(stack);
     }
+    
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         if(Screen.hasShiftDown()) {

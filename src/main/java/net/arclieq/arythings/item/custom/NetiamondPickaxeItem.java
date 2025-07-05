@@ -32,10 +32,8 @@ public class NetiamondPickaxeItem extends PickaxeItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         StatusEffectInstance effect = new StatusEffectInstance(StatusEffects.HASTE, 9600, 1, false, true), effect1 = new StatusEffectInstance(StatusEffects.NIGHT_VISION, 9600, 0, false, true);
         ItemStack stack = user.getStackInHand(hand);
-
         if (user instanceof ServerPlayerEntity player) {
             int getCounter = CounterHelperUtil.getCounterValue(player.getUuid(), "netiamond", world.getServer());
-            
             int seconds = 900 - getCounter / 20;
             int minutes = seconds / 60;
             seconds = seconds - (minutes * 60);
@@ -51,15 +49,16 @@ public class NetiamondPickaxeItem extends PickaxeItem {
                         CounterHelperUtil.setCounter(player.getUuid(), "netiamond", 0, CounterMode.TICK, world.getServer());
                         ItemUsage.consumeHeldItem(world, user, hand);
                     } else {
-                            user.playSound(SoundEvents.BLOCK_GLASS_BREAK);
-                            user.sendMessage(Text.literal("Please wait " + minutes + "m, " + seconds + "s!").formatted(Arythings.RED), true);
-                            Arythings.LOGGER.debug("Netiamond Pickaxe -- " + getCounter + " ticks has passed.");
+                        user.playSound(SoundEvents.BLOCK_GLASS_BREAK);
+                        user.sendMessage(Text.literal("Please wait " + minutes + "m, " + seconds + "s!").formatted(Arythings.RED), true);
+                        Arythings.LOGGER.debug("Netiamond Pickaxe -- " + getCounter + " ticks has passed.");
                     }
                 }
             }
         }
         return TypedActionResult.fail(stack);
     }
+
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         if (Screen.hasShiftDown()) {

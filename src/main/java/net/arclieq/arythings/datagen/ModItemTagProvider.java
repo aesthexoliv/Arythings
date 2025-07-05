@@ -128,6 +128,12 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         getOrCreateTagBuilder(ModTags.Items.TRANSFORMABLE_ITEMS)
         .add(Items.DIAMOND);
+        getOrCreateTagBuilder(ModTags.Items.MATERIAL_ITEMS)
+        .add(ModItems.NETIAMOND)
+        .add(ModItems.LUZZANTUM_INGOT)
+        .add(ModItems.MYTHRIL_INGOT)
+        .add(ModItems.LUMIT_SHARD)
+        .add(ModItems.ZAZUM_INGOT);
     }
     
 }

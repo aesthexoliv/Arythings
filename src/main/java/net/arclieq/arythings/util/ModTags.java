@@ -18,6 +18,8 @@ public class ModTags {
         public static final TagKey<Block> INCORRECT_FOR_LUMIT_TOOL = createTag("incorrect_for_lumit_tool");
         public static final TagKey<Block> NEEDS_MYTHRIL_TOOL = createTag("needs_mythril_tool");
         public static final TagKey<Block> INCORRECT_FOR_MYTHRIL_TOOL = createTag("incorrect_for_mythril_tool");
+        public static final TagKey<Block> NEEDS_ZAZUM_TOOL = createTag("needs_zazum_tool");
+        public static final TagKey<Block> INCORRECT_FOR_ZAZUM_TOOL = createTag("incorrect_for_zazum_tool");
 
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK, Identifier.of(Arythings.MOD_ID, name));
@@ -26,6 +28,7 @@ public class ModTags {
         
     }
     public static class Items {
+        public static final TagKey<Item> MATERIAL_ITEMS = createTag("mod_material_items");
         public static final TagKey<Item> TRANSFORMABLE_ITEMS = createTag("transformable_items");
 
         private static TagKey<Item> createTag(String name) {

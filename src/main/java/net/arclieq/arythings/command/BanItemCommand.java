@@ -41,7 +41,7 @@ public class BanItemCommand {
                     }
                     
                     // Ban item:
-                    ConfigManager.addBannedItemAndSave(itemId.toString());
+                    ConfigManager.addBannedItem(itemId.toString());
                     context.getSource().sendFeedback(() -> Text.literal("Item '").append(Text.literal(itemId.toString()).formatted(Formatting.RED)).append("' is now banned and will be removed from inventories."), true);
                     return 1;
                 })
@@ -76,7 +76,7 @@ public class BanItemCommand {
                     }
 
                     // Banned item unban:
-                    ConfigManager.removeBannedItemAndSave(itemId.toString());
+                    ConfigManager.removeBannedItem(itemId.toString());
                     context.getSource().sendFeedback(() -> Text.literal("Item '").append(Text.literal(itemId.toString()).formatted(Formatting.GREEN)).append("' is no longer banned."), true);
                     return 1;
                 })

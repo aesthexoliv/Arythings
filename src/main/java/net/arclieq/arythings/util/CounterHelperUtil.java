@@ -30,6 +30,7 @@ import net.minecraft.util.WorldSavePath;
  * Utility class for managing player counters with modes.
  */
 public class CounterHelperUtil {
+    // maxCounterValue -> mCV, unchangeableCounters -> uC
 
     // GSON instance for serializing/deserializing player counter data
     static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -40,8 +41,8 @@ public class CounterHelperUtil {
     private static final Map<UUID, Map<String, CounterData>> playerCounters = new HashMap<>();
 
     // Global configuration values for counters, now managed by Arythings.java and passed here.
-    public static int maxCounterValue = 32767;
-    private static Set<String> unchangeableCounters = new HashSet<>();
+    public static int mCV = 32767;
+    private static Set<String> uC = new HashSet<>();
 
     // Enum for counter modes
     public enum CounterMode {
@@ -64,57 +65,75 @@ public class CounterHelperUtil {
     /**
      * Applies configuration values loaded from the main mod class.
      * This centralizes config management in Arythings.java.
-     *
      * @param maxVal The maximum value for any counter.
      * @param unchangeable The set of counter names that cannot be changed or removed via commands.
      */
     public static void applyConfig(int maxVal, Set<String> unchangeable) {
-        maxCounterValue = maxVal;
-        unchangeableCounters = new HashSet<>(unchangeable); // Create a copy
+        mCV = maxVal;
+        uC = new HashSet<>(unchangeable); // Create a copy
     }
 
     /**
      * Provides access to the maximum counter value.
-     *
      * @return the maximum allowed value for counters.
      */
     public static int getMaxCounterValue() {
-        return maxCounterValue;
+        return mCV;
     }
 
     /**
      * Provides access to the set of unchangeable counter names.
-     *
      * @return an unmodifiable set of unchangeable counter names.
      */
     public static Set<String> getUnchangeableCounters() {
-        return Collections.unmodifiableSet(unchangeableCounters);
+        return Collections.unmodifiableSet(uC);
     }
 
     /**
-     * Gets the value of a counter for a player.
+     * Gets BOTH the mode and the value of a counter.
+     * 
+     * @param uuid
+     * @param counter
+     * @param server
+     * @return Map.Entry<Integer, CounterMode>
      */
-    public static int getCounterValue(UUID playerUUID, String counterName, MinecraftServer server) {
-        if (playerCounters.containsKey(playerUUID) && playerCounters.get(playerUUID).containsKey(counterName)) {
-            CounterData data = playerCounters.get(playerUUID).get(counterName);
+    public static Map.Entry<Integer, CounterMode> getCounter(UUID uuid, String counter, MinecraftServer server) {
+        if (playerCounters.containsKey(uuid) && playerCounters.get(uuid).containsKey(counter)) {
+            CounterData data = playerCounters.get(uuid).get(counter);
             // If mode is CUSTOM, retrieve from scoreboard, otherwise use stored value
             if (data.mode == CounterMode.CUSTOM) {
-                return getCustomCounterFromScoreboard(server, playerUUID, counterName);
+                return Map.entry(getCustomCounterFromScoreboard(server, uuid, counter), CounterMode.CUSTOM);
             }
-            return data.value;
+            return Map.entry(data.value, data.mode);
         }
-        return 0; // Default value if counter not found
+
+        return Map.entry(0, CounterMode.MANUAL);
     }
 
     /**
-     * Gets the mode of a counter for a player.
+     * Helper method to find a counter's mode without having to use 'CounterHelperUtil.getCounter().getValue()'.
+     * <p>Useful when just returning a </p>
+     * 
+     * @param uuid
+     * @param counter
+     * @param server
+     * @return
      */
-    public static CounterMode getCounterMode(UUID playerUUID, String counterName) {
-        if (playerCounters.containsKey(playerUUID) && playerCounters.get(playerUUID).containsKey(counterName)) {
-            return playerCounters.get(playerUUID).get(counterName).mode;
-        }
-        return CounterMode.MANUAL; // Default mode if counter not found
+    public static CounterMode getCounterMode(UUID uuid, String counter, MinecraftServer server) {
+        return getCounter(uuid, counter, server).getValue();
     }
+    /**
+     * 
+     * 
+     * @param uuid
+     * @param counter
+     * @param server
+     * @return
+     */
+    public static int getCounterValue(UUID uuid, String counter, MinecraftServer server) {
+        return getCounter(uuid, counter, server).getKey();
+    }
+
 
     /**
      * Sets the value and mode of a counter for a player.

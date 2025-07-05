@@ -38,58 +38,57 @@ public class NetiamondSwordItem extends SwordItem {
         effect3 = new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 9600, 0, false, true),effect4 = new StatusEffectInstance(StatusEffects.REGENERATION, 9600, 2, false, true);
         ItemStack stack = user.getStackInHand(hand);
         if(user instanceof ServerPlayerEntity player) {
-        int getCounter = CounterHelperUtil.getCounterValue(player.getUuid(), "netiamond", world.getServer());
-        
-        int seconds = 900 - getCounter / 20;
-		int seconds1 = 600 - getCounter / 20;
-		int minutes = seconds / 60;
-	    int minutes1 = seconds1 / 60;
-		seconds1 = seconds1 - (minutes1 * 60);
-		seconds = seconds - (minutes * 60);
-        // Checks if item is correct and world is server, a.k.a !world.isClient() (I dont understand it...)
-        if (!world.isClient() && stack.getItem() == ModItems.NETIAMOND_SWORD) {
-            // Holding shift check
-			if (Screen.hasShiftDown()) {
-                // 10m cooldown check
-                if(getCounter >= 12000) {
-                    // RESISTANCE + STRENGTH
-                    user.playSound(SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK);
-                    user.addStatusEffect(effect, user);
-                    user.addStatusEffect(effect1, user);
-                    CounterHelperUtil.setCounter(player.getUuid(), "netiamond", 0, CounterMode.TICK, world.getServer());
-                    
-                    ItemUsage.consumeHeldItem(world, user, hand);
-                } else {
+            int getCounter = CounterHelperUtil.getCounterValue(player.getUuid(), "netiamond", world.getServer());
+            int seconds = 900 - getCounter / 20;
+		    int seconds1 = 600 - getCounter / 20;
+		    int minutes = seconds / 60;
+	        int minutes1 = seconds1 / 60;
+		    seconds1 = seconds1 - (minutes1 * 60);
+		    seconds = seconds - (minutes * 60);
+
+            // Checks if item is correct and world is server, a.k.a !world.isClient() (I dont understand it...)
+            if (!world.isClient() && stack.getItem() == ModItems.NETIAMOND_SWORD) {
+                // Holding shift check
+			    if (Screen.hasShiftDown()) {
+                    // 10m cooldown check
+                    if(getCounter >= 12000) {
+                        // RESISTANCE + STRENGTH
+                        user.playSound(SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK);
+                        user.addStatusEffect(effect, user);
+                        user.addStatusEffect(effect1, user);
+                        CounterHelperUtil.setCounter(player.getUuid(), "netiamond", 0, CounterMode.TICK, world.getServer());
+                        ItemUsage.consumeHeldItem(world, user, hand);
+                    } else {
                         user.playSound(SoundEvents.BLOCK_GLASS_BREAK);
                         user.sendMessage(Text.literal("Please wait " + minutes1 + "m, " + seconds1 + "s!").formatted(Arythings.RED), true);
                         Arythings.LOGGER.debug("Netiamond Sword -- " + getCounter + " ticks has passed.");
-                }
-			} else {
-                // Holding CTRL check
-                if(Screen.hasControlDown()) {
-                    // 15m cooldown check
-                    if(getCounter >= 18000) {
-                        user.playSound(SoundEvents.BLOCK_AMETHYST_CLUSTER_FALL);
-                        user.addStatusEffect(effect2, user);
-                        user.addStatusEffect(effect3, user);
-                        user.addStatusEffect(effect4, user);
-                        CounterHelperUtil.setCounter(player.getUuid(), "netiamond", 0, CounterMode.TICK, world.getServer());
-                        
-                        ItemUsage.consumeHeldItem(world, user, hand);
-                    } else {
+                    }
+			    } else {
+                    // Holding CTRL check
+                    if(Screen.hasControlDown()) {
+                        // 15m cooldown check
+                        if(getCounter >= 18000) {
+                            user.playSound(SoundEvents.BLOCK_AMETHYST_CLUSTER_FALL);
+                            user.addStatusEffect(effect2, user);
+                            user.addStatusEffect(effect3, user);
+                            user.addStatusEffect(effect4, user);
+                            CounterHelperUtil.setCounter(player.getUuid(), "netiamond", 0, CounterMode.TICK, world.getServer());
+                            ItemUsage.consumeHeldItem(world, user, hand);
+                        } else {
                             user.playSound(SoundEvents.BLOCK_GLASS_BREAK);
                             user.sendMessage(Text.literal("Please wait " + minutes + "m, " + seconds + "s!").formatted(Arythings.RED), true);
                             Arythings.LOGGER.debug("Netiamond Sword -- " + getCounter + " ticks has passed.");
+                        }
                     }
                 }
             }
         }
-    }
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             user.clearStatusEffects();
         });
         return TypedActionResult.fail(stack);
     }
+
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         if(Screen.hasShiftDown()) {
@@ -101,7 +100,7 @@ public class NetiamondSwordItem extends SwordItem {
             tooltip.add(Text.literal("Resistance II 4:00 and Strength II 8:00.").formatted(Arythings.AQUA));
             tooltip.add(Text.literal("Cooldown: 10m").formatted(Arythings.AQUA));
             tooltip.add(Text.literal(""));
-            tooltip.add(Text.literal("Reminder: Neitamond cooldowns are §oALL§r§c connected.").formatted(Arythings.RED));        
+            tooltip.add(Text.literal("Reminder: Neitamond cooldowns are connected.").formatted(Arythings.RED));        
         } else {
             tooltip.add(Text.literal("Hold SHIFT for more information!").formatted(Arythings.AQUA));
         }

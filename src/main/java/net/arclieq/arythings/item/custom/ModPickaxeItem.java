@@ -60,25 +60,23 @@ public class ModPickaxeItem extends PickaxeItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         if (user instanceof ServerPlayerEntity player) {
-            
+            int counterValue = CounterHelperUtil.getCounterValue(player.getUuid(), "luzzantum", world.getServer());
             int seconds = 720 - CounterHelperUtil.getCounterValue(player.getUuid(), "luzzantum", world.getServer()) / 20;
             int minutes = seconds / 60;
             seconds = seconds - (minutes * 60);
-            if (!world.isClient()) {
-                if (this.getMaterial() == ModToolMaterials.LUZZANTUM && stack.getItem() == ModItems.UPGRADED_LUZZANTUM_PICKAXE) {
-                    if (CounterHelperUtil.getCounterValue(player.getUuid(), "luzzantum", world.getServer()) >= 14400) {
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 9600, 0, false, true, true), user);
-                        CounterHelperUtil.setCounter(player.getUuid(), "luzzantum", 0, CounterMode.TICK, world.getServer());
-                        return TypedActionResult.success(stack);
-                    } else {
-                        user.sendMessage(Text.literal("You need to wait " + minutes + "m" + seconds + "s" + "!").formatted(Arythings.RED), true);
-                    }
-
+            if (!world.isClient() && stack.getItem() == ModItems.UPGRADED_LUZZANTUM_PICKAXE) {
+                if (counterValue >= 14400) {
+                    user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 9600, 0, false, true, true), user);
+                    CounterHelperUtil.setCounter(player.getUuid(), "luzzantum", 0, CounterMode.TICK, world.getServer());
+                    return TypedActionResult.success(stack);
+                } else {
+                    user.sendMessage(Text.literal("You need to wait " + minutes + "m" + seconds + "s" + "!").formatted(Arythings.RED), true);
                 }
             }
         }
         return TypedActionResult.fail(stack);
     }
+    
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         if(Screen.hasShiftDown()) {
@@ -86,7 +84,7 @@ public class ModPickaxeItem extends PickaxeItem {
                 tooltip.add(Text.literal("It shines in the dark, with its mysterious glowing properties...").formatted(Arythings.AQUA));
                 tooltip.add(Text.literal("It is said that whoever has this item... can have haste,").formatted(Arythings.AQUA));
                 tooltip.add(Text.literal("but... it's unknown what other consenquences it could behold...").formatted(Arythings.RED));
-                tooltip.add(Text.literal("Cannot be upgraded with an §kAstryluna§r§c Star.").formatted(Arythings.RED));
+                tooltip.add(Text.literal("Can be upgraded with an Astryluna Star.").formatted(Arythings.RED));
             } else if(this.getMaterial() == ModToolMaterials.MYTHRIL) {
                 tooltip.add(Text.literal("It's just another starter pickaxe at the end of the day...").formatted(Arythings.AQUA));
             } else if(this.getMaterial() == ModToolMaterials.LUZZANTUM) {
@@ -94,7 +92,7 @@ public class ModPickaxeItem extends PickaxeItem {
                 tooltip.add(Text.literal("Which, is used to create this and other items.").formatted(Arythings.AQUA));
                 tooltip.add(Text.literal("And... once you create an item, you can also upgrade it, but it has a downside;").formatted(Arythings.AQUA));
                 tooltip.add(Text.literal("Most upgraded items will have weird effects...").formatted(Arythings.RED));
-            } else if(this.getMaterial() == ModToolMaterials.LUZZANTUM && stack.getItem() == ModItems.UPGRADED_LUZZANTUM_PICKAXE) {
+            } else if(stack.getItem() == ModItems.UPGRADED_LUZZANTUM_PICKAXE) {
                 tooltip.add(Text.literal("Upgraded Luzzantum Pickaxe: Gives you Haste I while holding in main hand,").formatted(Arythings.AQUA));
                 tooltip.add(Text.literal("And gives you Speed I, Resistance II for 8m (Right click)").formatted(Arythings.RED));
                 tooltip.add(Text.literal("Cooldown: 12m").formatted(Arythings.RED));

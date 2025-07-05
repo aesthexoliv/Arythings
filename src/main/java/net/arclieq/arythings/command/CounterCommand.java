@@ -110,7 +110,7 @@ public class CounterCommand {
                                         if (playerCounters == null || playerCounters.isEmpty()) continue;
 
                                         for (String counter : playerCounters.keySet()) {
-                                            CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counter);
+                                            CounterMode mode = CounterHelperUtil.getCounter(player.getUuid(), counter, server).getValue();
                                             CounterHelperUtil.setCounter(player.getUuid(), counter, amount, mode, server);
                                             counterCount.incrementAndGet();
                                         }
@@ -136,7 +136,7 @@ public class CounterCommand {
                                             for (ServerPlayerEntity player : playersToAffect) {
                                                 Map<String, CounterHelperUtil.CounterData> playerCounters = CounterHelperUtil.getAllPlayerCounters().get(player.getUuid());
                                                 if (playerCounters != null && playerCounters.containsKey(counterName)) {
-                                                    CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counterName);
+                                                    CounterMode mode = CounterHelperUtil.getCounter(player.getUuid(), counterName, server).getValue();
                                                     CounterHelperUtil.setCounter(player.getUuid(), counterName, amount, mode, server);
                                                     affectedCount.incrementAndGet();
                                                 }
@@ -166,7 +166,7 @@ public class CounterCommand {
                                                     for (ServerPlayerEntity player : playersToAffect) {
                                                         Map<String, CounterHelperUtil.CounterData> playerCounters = CounterHelperUtil.getAllPlayerCounters().get(player.getUuid());
                                                         if (playerCounters != null && playerCounters.containsKey(counterName)) {
-                                                            CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counterName);
+                                                            CounterMode mode = CounterHelperUtil.getCounter(player.getUuid(), counterName, server).getValue();
                                                             CounterHelperUtil.setCounter(player.getUuid(), counterName, amount, mode, server);
                                                             affectedPlayersCount.incrementAndGet();
                                                         }
@@ -200,7 +200,7 @@ public class CounterCommand {
                                                 if (playerCounters == null || playerCounters.isEmpty()) continue;
 
                                                 for (String counter : playerCounters.keySet()) {
-                                                    CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counter);
+                                                    CounterMode mode = CounterHelperUtil.getCounter(player.getUuid(), counter, server).getValue();
                                                     CounterHelperUtil.setCounter(player.getUuid(), counter, amount, mode, server);
                                                     counterCount.incrementAndGet();
                                                 }
@@ -239,8 +239,8 @@ public class CounterCommand {
                                         if (playerCounters == null || playerCounters.isEmpty()) continue;
 
                                         for (String counter : playerCounters.keySet()) {
-                                            CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counter);
-                                            int current = CounterHelperUtil.getCounterValue(player.getUuid(), counter, server);
+                                            CounterMode mode = CounterHelperUtil.getCounter(player.getUuid(), counter, server).getValue();
+                                            int current = CounterHelperUtil.getCounter(player.getUuid(), counter, server).getKey();
                                             CounterHelperUtil.setCounter(player.getUuid(), counter, current + amount, mode, server);
                                             counterCount.incrementAndGet();
                                         }
@@ -266,8 +266,8 @@ public class CounterCommand {
                                             for (ServerPlayerEntity player : playersToAffect) {
                                                 Map<String, CounterHelperUtil.CounterData> playerCounters = CounterHelperUtil.getAllPlayerCounters().get(player.getUuid());
                                                 if (playerCounters != null && playerCounters.containsKey(counterName)) {
-                                                    CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counterName);
-                                                    int current = CounterHelperUtil.getCounterValue(player.getUuid(), counterName, server);
+                                                    CounterMode mode = CounterHelperUtil.getCounter(player.getUuid(), counterName, server).getValue();
+                                                    int current = CounterHelperUtil.getCounter(player.getUuid(), counterName, server).getKey();
                                                     CounterHelperUtil.setCounter(player.getUuid(), counterName, current + amount, mode, server);
                                                     affectedCount.incrementAndGet();
                                                 }
@@ -297,8 +297,8 @@ public class CounterCommand {
                                                     for (ServerPlayerEntity player : playersToAffect) {
                                                         Map<String, CounterHelperUtil.CounterData> playerCounters = CounterHelperUtil.getAllPlayerCounters().get(player.getUuid());
                                                         if (playerCounters != null && playerCounters.containsKey(counterName)) {
-                                                            CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counterName);
-                                                            int current = CounterHelperUtil.getCounterValue(player.getUuid(), counterName, server);
+                                                            CounterMode mode = CounterHelperUtil.getCounter(player.getUuid(), counterName, server).getValue();
+                                                            int current = CounterHelperUtil.getCounter(player.getUuid(), counterName, server).getKey();
                                                             CounterHelperUtil.setCounter(player.getUuid(), counterName, current + amount, mode, server);
                                                             affectedPlayersCount.incrementAndGet();
                                                         }
@@ -332,8 +332,8 @@ public class CounterCommand {
                                                 if (playerCounters == null || playerCounters.isEmpty()) continue;
 
                                                 for (String counter : playerCounters.keySet()) {
-                                                    CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counter);
-                                                    int current = CounterHelperUtil.getCounterValue(player.getUuid(), counter, server);
+                                                    CounterMode mode = CounterHelperUtil.getCounter(player.getUuid(), counter, server).getValue();
+                                                    int current = CounterHelperUtil.getCounter(player.getUuid(), counter, server).getKey();
                                                     CounterHelperUtil.setCounter(player.getUuid(), counter, current + amount, mode, server);
                                                     counterCount.incrementAndGet();
                                                 }
@@ -445,7 +445,7 @@ public class CounterCommand {
                                             // Iterate through all players who have existing counter data
                                             for (UUID playerUUID : CounterHelperUtil.getAllPlayerCounters().keySet()) {
                                                 if (CounterHelperUtil.hasCounter(playerUUID, countername)) {
-                                                    int value = CounterHelperUtil.getCounterValue(playerUUID, countername, server);
+                                                    int value = CounterHelperUtil.getCounter(playerUUID, countername, server).getKey();
                                                     CounterHelperUtil.setCounter(playerUUID, countername, value, mode, server);
                                                     changed.getAndIncrement();
                                                 }
@@ -453,7 +453,7 @@ public class CounterCommand {
                                             // Also check for online players who might not yet be in saved data but have the counter
                                             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                                                 if (CounterHelperUtil.hasCounter(player.getUuid(), countername)) {
-                                                    int value = CounterHelperUtil.getCounterValue(player.getUuid(), countername, server);
+                                                    int value = CounterHelperUtil.getCounter(player.getUuid(), countername, server).getKey();
                                                     CounterHelperUtil.setCounter(player.getUuid(), countername, value, mode, server);
                                                     // No need to increment 'changed' again if it was already handled by allPlayerCounters loop
                                                 }

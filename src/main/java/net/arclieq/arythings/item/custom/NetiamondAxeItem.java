@@ -32,15 +32,14 @@ public class NetiamondAxeItem extends AxeItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         StatusEffectInstance effect = new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 9600, 0, false, true),
-                effect1 = new StatusEffectInstance(StatusEffects.SPEED, 4800, 1, false, true),
-                effect2 = new StatusEffectInstance(StatusEffects.STRENGTH, 9600, 0, false, true),
-                effect3 = new StatusEffectInstance(StatusEffects.SATURATION, 9600, 0, false, true),
-                effect4 = new StatusEffectInstance(StatusEffects.REGENERATION, 9600, 0, false, true);
+            effect1 = new StatusEffectInstance(StatusEffects.SPEED, 4800, 1, false, true),
+            effect2 = new StatusEffectInstance(StatusEffects.STRENGTH, 9600, 0, false, true),
+            effect3 = new StatusEffectInstance(StatusEffects.SATURATION, 9600, 0, false, true),
+            effect4 = new StatusEffectInstance(StatusEffects.REGENERATION, 9600, 0, false, true);
         ItemStack stack = user.getStackInHand(hand);
 
-        if (user instanceof ServerPlayerEntity player) { // Check if it's a ServerPlayerEntity
+        if (user instanceof ServerPlayerEntity player) {
             int getCounter = CounterHelperUtil.getCounterValue(player.getUuid(), "netiamond", world.getServer());
-            
             int seconds = 900 - getCounter / 20;
             int seconds1 = 600 - getCounter / 20;
             int minutes = seconds / 60;
@@ -59,14 +58,11 @@ public class NetiamondAxeItem extends AxeItem {
                         user.addStatusEffect(effect, user);
                         user.addStatusEffect(effect1, user);
                         CounterHelperUtil.setCounter(player.getUuid(), "netiamond", 0, CounterMode.TICK, world.getServer());
-                        
                         ItemUsage.consumeHeldItem(world, user, hand);
                     } else {
-                        // Message cooldown check (3s)
-                        
-                            user.playSound(SoundEvents.BLOCK_GLASS_BREAK);
-                            user.sendMessage(Text.literal("Please wait " + minutes1 + "m, " + seconds1 + "s!").formatted(Arythings.RED), true);
-                            Arythings.LOGGER.debug("Netiamond Axe -- " + getCounter + " ticks has passed.");
+                        user.playSound(SoundEvents.BLOCK_GLASS_BREAK);
+                        user.sendMessage(Text.literal("Please wait " + minutes1 + "m, " + seconds1 + "s!").formatted(Arythings.RED), true);
+                        Arythings.LOGGER.debug("Netiamond Axe -- " + getCounter + " ticks has passed.");
                     }
                 } else {
                     // Holding CTRL check
@@ -78,12 +74,11 @@ public class NetiamondAxeItem extends AxeItem {
                             user.addStatusEffect(effect3, user);
                             user.addStatusEffect(effect4, user);
                             CounterHelperUtil.setCounter(player.getUuid(), "netiamond", 0, CounterMode.TICK, world.getServer());
-                            
                             ItemUsage.consumeHeldItem(world, user, hand);
                         } else {
-                                user.playSound(SoundEvents.BLOCK_GLASS_BREAK);
-                                user.sendMessage(Text.literal("Please wait " + minutes + "m, " + seconds + "s!").formatted(Arythings.RED), true);
-                                Arythings.LOGGER.debug("Netiamond Axe -- " + getCounter + " ticks has passed.");
+                            user.playSound(SoundEvents.BLOCK_GLASS_BREAK);
+                            user.sendMessage(Text.literal("Please wait " + minutes + "m, " + seconds + "s!").formatted(Arythings.RED), true);
+                            Arythings.LOGGER.debug("Netiamond Axe -- " + getCounter + " ticks has passed.");
                         }
                     }
                 }

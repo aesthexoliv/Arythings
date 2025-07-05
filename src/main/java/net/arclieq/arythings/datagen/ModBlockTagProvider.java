@@ -29,7 +29,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider{
         .add(ModBlocks.NETHER_LUZZANTUM_ORE)
         .add(ModBlocks.LUMIT_BLOCK)
         .add(ModBlocks.LUMIT_ORE)
-        .add(ModBlocks.DEEPSLATE_LUMIT_ORE);
+        .add(ModBlocks.DEEPSLATE_LUMIT_ORE)
+        .add(ModBlocks.ZAZUM_BLOCK)
+        .add(ModBlocks.ZAZUM_ORE)
+        .add(ModBlocks.DEEPSLATE_ZAZUM_ORE);
         // Needs diamond tool
         getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
         .add(ModBlocks.LUZZANTUM_BLOCK)
@@ -40,7 +43,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider{
         .add(ModBlocks.NETIAMOND_BLOCK)
         .add(ModBlocks.LUMIT_BLOCK)
         .add(ModBlocks.LUMIT_ORE)
-        .add(ModBlocks.DEEPSLATE_LUMIT_ORE);
+        .add(ModBlocks.DEEPSLATE_LUMIT_ORE)
+        .add(ModBlocks.ZAZUM_BLOCK)
+        .add(ModBlocks.ZAZUM_ORE)
+        .add(ModBlocks.DEEPSLATE_ZAZUM_ORE);
         // Needs iron tool
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
         .add(ModBlocks.MYTHRIL_BLOCK)

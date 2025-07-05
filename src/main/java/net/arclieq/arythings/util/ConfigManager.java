@@ -19,49 +19,57 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Manages the mod's configuration for banned items and counter settings.
+ * Manages the configuration for Arythings' ban settings and counter settings.
  * Configuration is stored in 'config/arythings.json'.
+ * <p>Legend:</p>
+ * <p>bI -> bannedItems, mCV -> maxCounterValue, uC -> unchangeableCounters, aO -> affectsOperators, aC -> affectsCreative.</p>
  */
 public class ConfigManager {
-
-    // Internal storage for global configuration values
-    public static Set<String> bannedItems = new HashSet<>();
-    private static int maxCounterValue = 32767;
-    private static Set<String> unchangeableCounters = new HashSet<>();
-    private static boolean defaultAffectsOperators = false;
-    private static boolean defaultAffectsCreative = true;
+    public static Set<String> bI = new HashSet<>();
+    private static int mCV = 32767;
+    private static Set<String> uC = new HashSet<>();
+    private static boolean aO = false;
+    private static boolean aC = true;
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final String CONFIG_FILE_NAME = "arythings.json";
+    private static final String CONFIG = "arythings.json";
 
     /**
      * Loads configurations from 'arythings.json'. If the file doesn't exist
      * or is invalid, a new one is created with default settings.
      * Missing settings in an existing file are also added.
-     *
-     * Configuration structure:
-     * {
-     * "counter_settings": {
-     * "maxCounterValue": integer,
-     * "unchangeable_counters": ["counter_name1", "counter_name2"]
-     * },
-     * "ban_settings": {
-     * "affects_creative": boolean,
-     * "affects_operators": boolean,
-     * "banned_items": ["item_id1", "item_id2"]
-     * }
-     * }
      */
     public static void loadAndSyncConfig() {
+        /*
+         * Configuration structure:
+         * {
+         * "counter_settings": {
+         * "maxCounterValue": integer,
+         * "unchangeable_counters": ["counter_name1", "counter_name2"]
+         * },
+         * "ban_settings": {
+         * "affects_creative": boolean,
+         * "affects_operators": boolean,
+         * "banned_items": ["item_id1", "item_id2"]
+         * }
+         * }
+         */
+        // configDir is only used once (I'm pretty sure...?), so just use configDir instead of cD
+        // And also, it *would* be pretty confusing if it was cD...
         File configDir = Paths.get("config").toFile();
         if (!configDir.exists()) {
             configDir.mkdirs();
         }
 
-        Arythings.LOGGER.info("Loading mod configuration...");
-        File configFile = Paths.get("config", CONFIG_FILE_NAME).toFile();
+        Arythings.LOGGER.info("Loading configuration...");
+        // This 'File' configFile is an exception (no need for cF),
+        // because configFile is only used for Files.write and FileReader in this method. a.k.a, it *should* be fine
+        File configFile = Paths.get("config", CONFIG).toFile();
+        // Just use config instead, using only c.(...) will be confusing IMO.
         JsonObject config;
-        boolean needsSave = false;
+        // needsSave -> nS, it is used alot, and if I just use needsSave,
+        // it would be fine as well but it's way more easier to use 'nS = true;'
+        boolean nS = false;
 
         if (configFile.exists()) {
             try (FileReader reader = new FileReader(configFile)) {
@@ -70,43 +78,45 @@ public class ConfigManager {
                     config = parsed.getAsJsonObject();
                 } else {
                     config = new JsonObject();
-                    needsSave = true;
+                    nS = true;
                 }
             } catch (Exception e) {
-                Arythings.LOGGER.debug("Could not parse " + CONFIG_FILE_NAME + ", creating a new one.", e);
+                Arythings.LOGGER.debug("Could not parse " + CONFIG + ", creating a new one.", e);
                 config = new JsonObject();
-                needsSave = true;
+                nS = true;
             }
         } else {
             config = new JsonObject();
-            needsSave = true;
+            nS = true;
         }
 
-        JsonObject counterSettingsObj;
+        // Handling counter_settings, with mCV and uC being added. counterSettingsObj -> cSO
+        JsonObject cSO;
         if (!config.has("counter_settings") || !config.get("counter_settings").isJsonObject()) {
-            counterSettingsObj = new JsonObject();
-            config.add("counter_settings", counterSettingsObj);
-            needsSave = true;
+            cSO = new JsonObject();
+            config.add("counter_settings", cSO);
+            nS = true;
         } else {
-            counterSettingsObj = config.getAsJsonObject("counter_settings");
+            cSO = config.getAsJsonObject("counter_settings");
         }
 
-        if (!counterSettingsObj.has("maxCounterValue")) {
-            counterSettingsObj.addProperty("maxCounterValue", 32767);
-            needsSave = true;
+        if (!cSO.has("maxCounterValue")) {
+            cSO.addProperty("maxCounterValue", 32767);
+            nS = true;
         }
-        maxCounterValue = counterSettingsObj.get("maxCounterValue").getAsInt();
-        Arythings.LOGGER.debug("Loading maxCounterValue: " + maxCounterValue);
+        mCV = cSO.get("maxCounterValue").getAsInt();
+        Arythings.LOGGER.debug("Loading maxCounterValue: " + mCV);
 
-        if (!counterSettingsObj.has("unchangeable_counters") || !counterSettingsObj.get("unchangeable_counters").isJsonArray()) {
-            counterSettingsObj.add("unchangeable_counters", new JsonArray());
-            needsSave = true;
+        if (!cSO.has("unchangeable_counters") || !cSO.get("unchangeable_counters").isJsonArray()) {
+            cSO.add("unchangeable_counters", new JsonArray());
+            nS = true;
         }
-        JsonArray unchangeableCounterNamesArray = counterSettingsObj.getAsJsonArray("unchangeable_counters");
 
+        // Find "netiamond" and "luzzantum" in config and add if not found; unchangeableCounterNamesArray -> ucNA 
+        JsonArray ucNA = cSO.getAsJsonArray("unchangeable_counters");
         boolean foundNetiamond = false;
         boolean foundLuzzantum = false;
-        for (JsonElement element : unchangeableCounterNamesArray) {
+        for (JsonElement element : ucNA) {
             if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
                 String countername = element.getAsString();
                 if ("netiamond".equals(countername)) {
@@ -116,70 +126,71 @@ public class ConfigManager {
                     foundLuzzantum = true;
                 }
             } else {
-                needsSave = true;
+                nS = true;
             }
         }
         if (!foundNetiamond) {
-            unchangeableCounterNamesArray.add("netiamond");
-            needsSave = true;
+            ucNA.add("netiamond");
+            nS = true;
         }
         if (!foundLuzzantum) {
-            unchangeableCounterNamesArray.add("luzzantum");
-            needsSave = true;
+            ucNA.add("luzzantum");
+            nS = true;
         }
 
-        unchangeableCounters.clear();
-        unchangeableCounterNamesArray.forEach(element -> {
+        uC.clear();
+        ucNA.forEach(element -> {
             if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
-                unchangeableCounters.add(element.getAsString());
+                uC.add(element.getAsString());
             }
         });
 
-        JsonObject banSettingsObj;
+        // banSettingsObj -> bSO
+        JsonObject bSO;
         if (!config.has("ban_settings") || !config.get("ban_settings").isJsonObject()) {
-            banSettingsObj = new JsonObject();
-            config.add("ban_settings", banSettingsObj);
-            needsSave = true;
+            bSO = new JsonObject();
+            config.add("ban_settings", bSO);
+            nS = true;
         } else {
-            banSettingsObj = config.getAsJsonObject("ban_settings");
+            bSO = config.getAsJsonObject("ban_settings");
         }
 
-        if (!banSettingsObj.has("affects_creative")) {
-            banSettingsObj.addProperty("affects_creative", true);
-            needsSave = true;
+        if (!bSO.has("affects_creative")) {
+            bSO.addProperty("affects_creative", true);
+            nS = true;
         }
-        defaultAffectsCreative = banSettingsObj.get("affects_creative").getAsBoolean();
-        Arythings.LOGGER.debug("Loading defaultAffectsCreative: " + defaultAffectsCreative);
+        aC = bSO.get("affects_creative").getAsBoolean();
+        Arythings.LOGGER.debug("Loading affectsCreative: " + aC);
 
-        if (!banSettingsObj.has("affects_operators")) {
-            banSettingsObj.addProperty("affects_operators", false);
-            needsSave = true;
+        if (!bSO.has("affects_operators")) {
+            bSO.addProperty("affects_operators", false);
+            nS = true;
         }
-        defaultAffectsOperators = banSettingsObj.get("affects_operators").getAsBoolean();
-        Arythings.LOGGER.debug("Loading defaultAffectsOperators: " + defaultAffectsOperators);
+        aO = bSO.get("affects_operators").getAsBoolean();
+        Arythings.LOGGER.debug("Loading affectsOperators: " + aO);
 
 
-        if (!banSettingsObj.has("banned_items") || !banSettingsObj.get("banned_items").isJsonArray()) {
-            banSettingsObj.add("banned_items", new JsonArray());
-            needsSave = true;
+        if (!bSO.has("banned_items") || !bSO.get("banned_items").isJsonArray()) {
+            bSO.add("banned_items", new JsonArray());
+            nS = true;
         }
 
-        bannedItems.clear();
-        JsonArray bannedItemsArray = banSettingsObj.getAsJsonArray("banned_items");
-        for (JsonElement element : bannedItemsArray) {
+        bI.clear();
+        JsonArray bIArray = bSO.getAsJsonArray("banned_items");
+        for (JsonElement element : bIArray) {
             if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
-                bannedItems.add(element.getAsString());
+                bI.add(element.getAsString());
             } else {
-                needsSave = true;
+                nS = true;
             }
         }
-        Arythings.LOGGER.debug("Loading banned_items count: " + bannedItems.size());
+        Arythings.LOGGER.debug("Loading banned_items count: " + bI.size());
 
-        if (needsSave) {
+        if (nS) {
             saveConfig(config);
         }
 
-        CounterHelperUtil.applyConfig(maxCounterValue, unchangeableCounters);
+        CounterHelperUtil.applyConfig(mCV, uC);
         Arythings.LOGGER.info("Configuration loaded successfully!");
     }
 
@@ -187,10 +198,10 @@ public class ConfigManager {
      * Adds a new item to the banned list and saves the configuration.
      * @param itemId The full string ID of the item to ban (e.g., "minecraft:diamond").
      */
-    public static void addBannedItemAndSave(String itemId) {
-        if (!bannedItems.contains(itemId)) {
-            bannedItems.add(itemId);
-            saveCurrentConfigState();
+    public static void addBannedItem(String itemId) {
+        if (!bI.contains(itemId)) {
+            bI.add(itemId);
+            saveConfigState();
         }
     }
 
@@ -198,34 +209,41 @@ public class ConfigManager {
      * Removes an item from the banned list and saves the configuration.
      * @param itemId The full string ID of the item to unban (e.g., "minecraft:diamond").
      */
-    public static void removeBannedItemAndSave(String itemId) {
-        if (bannedItems.remove(itemId)) {
-            saveCurrentConfigState();
+    public static void removeBannedItem(String itemId) {
+        if (bI.remove(itemId)) {
+            saveConfigState();
         }
     }
 
     /**
      * Helper method to save the current state of all configuration variables to the file.
      */
-    private static void saveCurrentConfigState() {
-        JsonObject rootObj = new JsonObject();
+    private static void saveConfigState() {
+        // rootObj -> rO
+        JsonObject rO = new JsonObject();
 
-        JsonObject counterSettingsObj = new JsonObject();
-        counterSettingsObj.addProperty("maxCounterValue", maxCounterValue);
-        JsonArray unchangeableNames = new JsonArray();
-        unchangeableCounters.forEach(unchangeableNames::add);
-        counterSettingsObj.add("unchangeable_counters", unchangeableNames);
-        rootObj.add("counter_settings", counterSettingsObj);
+        // counterSettingsObj -> cSO
+        JsonObject cSO = new JsonObject();
+        cSO.addProperty("maxCounterValue", mCV);
 
-        JsonObject banSettingsObj = new JsonObject();
-        banSettingsObj.addProperty("affects_creative", defaultAffectsCreative);
-        banSettingsObj.addProperty("affects_operators", defaultAffectsOperators);
-        JsonArray bannedItemsJsonArray = new JsonArray();
-        bannedItems.forEach(bannedItemsJsonArray::add);
-        banSettingsObj.add("banned_items", bannedItemsJsonArray);
-        rootObj.add("ban_settings", banSettingsObj);
+        // unchangeableNames -> uN
+        JsonArray uN = new JsonArray();
+        uC.forEach(uN::add);
+        cSO.add("unchangeable_counters", uN);
+        rO.add("counter_settings", cSO);
 
-        saveConfig(rootObj);
+        // banSettingsObj -> bSO
+        JsonObject bSO = new JsonObject();
+        bSO.addProperty("affects_creative", aC);
+        bSO.addProperty("affects_operators", aO);
+
+        // bannedItemsJsonArray -> bIA
+        JsonArray bIA = new JsonArray();
+        bI.forEach(bIA::add);
+        bSO.add("banned_items", bIA);
+        rO.add("ban_settings", bSO);
+
+        saveConfig(rO);
     }
 
     /**
@@ -234,23 +252,23 @@ public class ConfigManager {
      * @return An unmodifiable set of banned item identifiers.
      */
     public static Set<String> getBannedItems() {
-        return Collections.unmodifiableSet(bannedItems);
+        return Collections.unmodifiableSet(bI);
     }
 
     /**
-     * Retrieves the global setting for whether banned items affect operators.
+     * Retrieves the setting for whether banned items affect operators.
      * @return True if banned items affect operators by default, false otherwise.
      */
     public static boolean getDefaultAffectsOperators() {
-        return defaultAffectsOperators;
+        return aO;
     }
 
     /**
-     * Retrieves the global setting for whether banned items affect creative players.
+     * Retrieves the setting for whether banned items affect creative players.
      * @return True if banned items affect creative players by default, false otherwise.
      */
     public static boolean getDefaultAffectsCreative() {
-        return defaultAffectsCreative;
+        return aC;
     }
 
     /**
@@ -258,7 +276,7 @@ public class ConfigManager {
      * @return The maximum value a counter can reach.
      */
     public static int getMaxCounterValue() {
-        return maxCounterValue;
+        return mCV;
     }
 
     /**
@@ -266,7 +284,7 @@ public class ConfigManager {
      * @return An unmodifiable set of unchangeable counter names.
      */
     public static Set<String> getUnchangeableCounters() {
-        return Collections.unmodifiableSet(unchangeableCounters);
+        return Collections.unmodifiableSet(uC);
     }
 
     /**
@@ -274,7 +292,9 @@ public class ConfigManager {
      * @param config The JsonObject representing the entire mod configuration.
      */
     private static void saveConfig(JsonObject config) {
-        File configFile = Paths.get("config", CONFIG_FILE_NAME).toFile();
+        // This 'File' configFile is an exception (no need for cF),
+        // Because configFile is only used for Files.write in this method. a.k.a, it *should* be fine
+        File configFile = Paths.get("config", CONFIG).toFile();
         try {
             Files.write(configFile.toPath(), GSON.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {

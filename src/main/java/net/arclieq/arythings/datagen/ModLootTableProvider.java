@@ -30,16 +30,19 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.MYTHRIL_BLOCK);
         addDrop(ModBlocks.LUZZANTUM_BLOCK);
         addDrop(ModBlocks.LUMIT_BLOCK);
+        addDrop(ModBlocks.ZAZUM_BLOCK);
 
         addDrop(ModBlocks.NETHER_NETIAMOND_ORE, oreDrops(ModBlocks.NETHER_NETIAMOND_ORE, ModItems.NETIAMOND));
         addDrop(ModBlocks.NETHER_LUZZANTUM_ORE, oreDrops(ModBlocks.NETHER_LUZZANTUM_ORE, ModItems.LUZZANTUM_INGOT));
         addDrop(ModBlocks.LUZZANTUM_ORE, oreDrops(ModBlocks.LUZZANTUM_ORE, ModItems.LUZZANTUM_INGOT));
+        addDrop(ModBlocks.ZAZUM_ORE, oreDrops(ModBlocks.ZAZUM_ORE, ModItems.ZAZUM_INGOT));
         
         addDrop(ModBlocks.DEEPSLATE_MYTHRIL_ORE, multipleOreDrops(ModBlocks.DEEPSLATE_MYTHRIL_ORE, ModItems.MYTHRIL_INGOT, 1, 4));
         addDrop(ModBlocks.MYTHRIL_ORE, multipleOreDrops(ModBlocks.MYTHRIL_ORE, ModItems.MYTHRIL_INGOT, 1, 3));
         addDrop(ModBlocks.DEEPSLATE_LUZZANTUM_ORE, multipleOreDrops(ModBlocks.DEEPSLATE_LUZZANTUM_ORE, ModItems.LUZZANTUM_INGOT, 1, 2));
         addDrop(ModBlocks.LUMIT_ORE, multipleOreDrops(ModBlocks.LUMIT_ORE, ModItems.LUMIT_SHARD, 1, 2));
         addDrop(ModBlocks.DEEPSLATE_LUMIT_ORE, multipleOreDrops(ModBlocks.DEEPSLATE_LUMIT_ORE, ModItems.LUMIT_SHARD, 1, 3));
+        addDrop(ModBlocks.DEEPSLATE_ZAZUM_ORE, multipleOreDrops(ModBlocks.DEEPSLATE_ZAZUM_ORE, ModItems.ZAZUM_INGOT, 1, 2));
         
     }
     public LootTable.Builder multipleOreDrops(Block blockDrop, Item item, float minDrops, float maxDrops) {

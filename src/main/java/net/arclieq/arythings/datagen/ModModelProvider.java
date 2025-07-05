@@ -38,6 +38,11 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.UPGRADED_LUZZANTUM_PICKAXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.UPGRADED_LUZZANTUM_AXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.UPGRADED_LUZZANTUM_SHOVEL, Models.HANDHELD);
+
+        itemModelGenerator.register(ModItems.UPGRADED_LUMIT_SWORD, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.UPGRADED_LUMIT_PICKAXE, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.UPGRADED_LUMIT_AXE, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.UPGRADED_LUMIT_SHOVEL, Models.HANDHELD);
         
         itemModelGenerator.register(ModItems.UPGRADED_MACE, Items.MACE, Models.HANDHELD_MACE);
 
@@ -46,6 +51,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.NETIAMOND, Models.GENERATED);
         itemModelGenerator.register(ModItems.ASTRYLUNA_STAR, Models.GENERATED);
         itemModelGenerator.register(ModItems.MYTHRIL_INGOT, Models.GENERATED);
+        itemModelGenerator.register(ModItems.ZAZUM_INGOT, Models.GENERATED);
         itemModelGenerator.register(ModItems.NETIAMOND_AXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.NETIAMOND_PICKAXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.NETIAMOND_SHOVEL, Models.HANDHELD);
@@ -65,13 +71,6 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.MYTHRIL_AXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.MYTHRIL_SHOVEL, Models.HANDHELD);
         itemModelGenerator.register(ModItems.MYTHRIL_HOE, Models.HANDHELD);
-
-        /*
-        itemModelGenerator.register(ModItems.BROKEN_MYTHRIL_HELMET, Models.GENERATED);
-        itemModelGenerator.register(ModItems.BROKEN_MYTHRIL_CHESTPLATE, Models.GENERATED);
-        itemModelGenerator.register(ModItems.BROKEN_MYTHRIL_LEGGINGS, Models.GENERATED);
-        itemModelGenerator.register(ModItems.BROKEN_MYTHRIL_BOOTS, Models.GENERATED);
-        // */
 
         itemModelGenerator.register(ModItems.BROKEN_LUZZANTUM_HELMET, Models.GENERATED);
         itemModelGenerator.register(ModItems.BROKEN_LUZZANTUM_CHESTPLATE, Models.GENERATED);

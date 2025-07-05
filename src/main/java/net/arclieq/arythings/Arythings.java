@@ -37,6 +37,8 @@ public class Arythings implements ModInitializer {
      * - Add upgraded mace usages (01/08/2025)
      * - Add luzzantum right click methods (01/08/2025)
      * - Create custom structures (01/08/2025)
+     * - Add Upgraded Lumit tool textures (01/08/2025)
+     * - Add Zazum textures (01/08/2025)
      * - Add nether ore textures, upgraded mace textures, new ores, blocks, and items textures (01/08/2025)
      */
 
@@ -92,16 +94,17 @@ public class Arythings implements ModInitializer {
      */
     private void onPlayerJoin(MinecraftServer server, ServerPlayerEntity player) {
         UUID uuid = player.getUuid();
-        Map<String, CounterMode> allKnownCounterModes = new HashMap<>();
-        allKnownCounterModes.put("luzzantum", CounterMode.TICK);
-        allKnownCounterModes.put("netiamond", CounterMode.TICK);
+        // CM = counterModes
+        Map<String, CounterMode> CM = new HashMap<>();
+        CM.put("luzzantum", CounterMode.TICK);
+        CM.put("netiamond", CounterMode.TICK);
 
         for (Map<String, CounterHelperUtil.CounterData> playerCounters : CounterHelperUtil.getAllPlayerCounters().values()) {
-            playerCounters.forEach((name, data) -> allKnownCounterModes.put(name, data.mode));
+            playerCounters.forEach((name, data) -> CM.put(name, data.mode));
         }
         
         int defaultTickValue = 20000; 
-        for (Map.Entry<String, CounterMode> entry : allKnownCounterModes.entrySet()) {
+        for (Map.Entry<String, CounterMode> entry : CM.entrySet()) {
             String counterName = entry.getKey();
             CounterMode knownMode = entry.getValue();
 
@@ -123,9 +126,8 @@ public class Arythings implements ModInitializer {
     private void onServerStarted(MinecraftServer server) {
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             for (String counter : CounterHelperUtil.getAllPlayerCounters().getOrDefault(player.getUuid(), Collections.emptyMap()).keySet()) {
-                // Now using CounterHelperUtil.getMaxCounterValue()
                 if(CounterHelperUtil.getCounterValue(player.getUuid(), counter, server) > CounterHelperUtil.getMaxCounterValue()) {
-                    CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counter);
+                    CounterMode mode = CounterHelperUtil.getCounterMode(player.getUuid(), counter, server);
                     CounterHelperUtil.setCounter(player.getUuid(), counter, CounterHelperUtil.getMaxCounterValue(), mode, server);
                 }
             }
@@ -146,7 +148,7 @@ public class Arythings implements ModInitializer {
      * Periodically saves counter data to file (every 5 minutes).
      */
     private void onServerTick(MinecraftServer server) {
-        if (!ConfigManager.bannedItems.isEmpty()) {
+        if (!ConfigManager.bI.isEmpty()) {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 for (int i = 0; i < player.getInventory().size(); i++) {
                     Identifier currentItemIdentifier = net.minecraft.registry.Registries.ITEM.getId(player.getInventory().getStack(i).getItem());

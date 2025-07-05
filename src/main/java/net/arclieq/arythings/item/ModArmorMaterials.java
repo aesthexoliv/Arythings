@@ -23,6 +23,7 @@ public class ModArmorMaterials {
    public static final RegistryEntry<ArmorMaterial> MYTHRIL;
    public static final RegistryEntry<ArmorMaterial> LUZZANTUM;
    public static final RegistryEntry<ArmorMaterial> LUMIT;
+   public static final RegistryEntry<ArmorMaterial> ZAZUM;
 
    public ModArmorMaterials() {
    }
@@ -56,34 +57,47 @@ public class ModArmorMaterials {
          map.put(Type.CHESTPLATE, 8);
          map.put(Type.HELMET, 3);
          map.put(Type.BODY, 11);
-      }), 17, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.6F, 0.1F, () -> {
+      }), 15, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.6F, 0.1F, () -> {
          return Ingredient.ofItems(new ItemConvertible[]{ModItems.LUZZANTUM_INGOT});
       });
+
       MYTHRIL = register("mythril", Util.make(new EnumMap<ArmorItem.Type, Integer>(ArmorItem.Type.class), (EnumMap<ArmorItem.Type, Integer> map) -> {
          map.put(Type.BOOTS, 2);
          map.put(Type.LEGGINGS, 5);
          map.put(Type.CHESTPLATE, 7);
          map.put(Type.HELMET, 2);
          map.put(Type.BODY, 9);
-      }), 13, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.6F, 0.0F, () -> {
+      }), 17, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.6F, 0.0F, () -> {
          return Ingredient.ofItems(new ItemConvertible[]{ModItems.MYTHRIL_INGOT});
       });
+
       LUMIT = register("lumit", Util.make(new EnumMap<ArmorItem.Type, Integer>(ArmorItem.Type.class), (EnumMap<ArmorItem.Type, Integer> map) -> {
          map.put(Type.BOOTS, 4);
          map.put(Type.LEGGINGS, 7);
          map.put(Type.CHESTPLATE, 9);
          map.put(Type.HELMET, 4);
          map.put(Type.BODY, 12);
-      }), 18, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.4F, 0.11F, () -> {
+      }), 16, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.4F, 0.11F, () -> {
          return Ingredient.ofItems(new ItemConvertible[]{ModItems.LUMIT_SHARD});
       });
+
+      ZAZUM = register("zazum", Util.make(new EnumMap<ArmorItem.Type, Integer>(ArmorItem.Type.class), (EnumMap<ArmorItem.Type, Integer> map) -> {
+         map.put(Type.BOOTS, 3);
+         map.put(Type.LEGGINGS, 7);
+         map.put(Type.CHESTPLATE, 9);
+         map.put(Type.HELMET, 3);
+         map.put(Type.BODY, 12);
+      }), 16, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.16F, 0.09F, () -> {
+         return Ingredient.ofItems(new ItemConvertible[]{ModItems.ZAZUM_INGOT});
+      } );
+
       NETIAMOND = register("netiamond", Util.make(new EnumMap<ArmorItem.Type, Integer>(ArmorItem.Type.class), (EnumMap<ArmorItem.Type, Integer> map) -> {
          map.put(Type.BOOTS, 6);
          map.put(Type.LEGGINGS, 9);
          map.put(Type.CHESTPLATE, 11);
          map.put(Type.HELMET, 6);
          map.put(Type.BODY, 14);
-      }), 20, SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, 6.5F, 0.36F, () -> {
+      }), 12, SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, 6.5F, 0.36F, () -> {
          return Ingredient.ofItems(new ItemConvertible[]{ModItems.NETIAMOND});
       });
    }
