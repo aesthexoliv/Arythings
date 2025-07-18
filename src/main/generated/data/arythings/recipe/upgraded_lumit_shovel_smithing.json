@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "arythings:lumit_shard"
+  },
+  "base": {
+    "item": "arythings:lumit_shovel"
+  },
+  "result": {
+    "count": 1,
+    "id": "arythings:upgraded_lumit_shovel"
+  },
+  "template": {
+    "item": "arythings:astryluna_star"
+  }
+}

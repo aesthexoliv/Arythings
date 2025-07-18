@@ -15,34 +15,34 @@ import net.minecraft.registry.Registries;
 public class ModItems {
     // Upgraded Mace
      public static final Item UPGRADED_MACE = registerItem("upgraded_mace", new UpgradedMace(new Item.Settings().maxDamage(1210)
-    .attributeModifiers(MaceItem.createAttributeModifiers()).rarity(Rarity.EPIC))),
+                .attributeModifiers(MaceItem.createAttributeModifiers()).rarity(Rarity.EPIC))),
 
     // --- Netiamond Items --- \\
      NETIAMOND = registerItem("netiamond", new Item(new Item.Settings().fireproof().rarity(Rarity.RARE))),
 
     // Netiamond Tools
      NETIAMOND_SWORD = registerItem("netiamond_sword",
-            new NetiamondSwordItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
+            new ModSwordItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
                     .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.NETIAMOND, 5, -2.0F))
                     .rarity(Rarity.RARE))),
 
      NETIAMOND_PICKAXE = registerItem("netiamond_pickaxe",
-            new NetiamondPickaxeItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
+            new ModPickaxeItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
                     .attributeModifiers(PickaxeItem.createAttributeModifiers(ModToolMaterials.NETIAMOND, 1.3F, -2.5F))
                     .rarity(Rarity.RARE))),
 
      NETIAMOND_AXE = registerItem("netiamond_axe",
-            new NetiamondAxeItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
+            new ModAxeItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
                     .attributeModifiers(AxeItem.createAttributeModifiers(ModToolMaterials.NETIAMOND, 6.0F, -2.8F))
                     .rarity(Rarity.RARE))),
 
      NETIAMOND_SHOVEL = registerItem("netiamond_shovel",
-            new NetiamondShovelItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
+            new ModShovelItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
                     .attributeModifiers(ShovelItem.createAttributeModifiers(ModToolMaterials.NETIAMOND, 1.7F, -2.5F))
                     .rarity(Rarity.RARE))),
                     
      NETIAMOND_HOE = registerItem("netiamond_hoe",
-            new NetiamondHoeItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
+            new ModHoeItem(ModToolMaterials.NETIAMOND, new Item.Settings().fireproof()
                     .attributeModifiers(HoeItem.createAttributeModifiers(ModToolMaterials.NETIAMOND, -1.7F, 0F))
                     .rarity(Rarity.RARE))),
 
@@ -123,6 +123,10 @@ public class ModItems {
             new ModShovelItem(ModToolMaterials.LUZZANTUM, new Item.Settings()
                     .attributeModifiers(ShovelItem.createAttributeModifiers(ModToolMaterials.LUZZANTUM, 1.4F, -2.8F))
                     .rarity(Rarity.RARE))),
+
+     UPGRADED_LUZZANTUM_HOE = registerItem("upgraded_luzzantum_hoe", 
+            new ModHoeItem(ModToolMaterials.LUZZANTUM, new Item.Settings()
+                    .attributeModifiers(HoeItem.createAttributeModifiers(ModToolMaterials.LUZZANTUM, -3.9F, 0F)))),
 
     // Luzzantum Armor
      LUZZANTUM_HELMET = registerItem("luzzantum_helmet",
@@ -255,21 +259,59 @@ public class ModItems {
     // Mythril Armor
      MYTHRIL_HELMET = registerItem("mythril_helmet",
             new ModArmorItem(ModArmorMaterials.MYTHRIL, ArmorItem.Type.HELMET,
-                    new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(30)).fireproof())),
-    MYTHRIL_CHESTPLATE = registerItem("mythril_chestplate",
+                    new Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(30)))),
+     MYTHRIL_CHESTPLATE = registerItem("mythril_chestplate",
             new ModArmorItem(ModArmorMaterials.MYTHRIL, ArmorItem.Type.CHESTPLATE,
-                    new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(30)).fireproof())),
-    MYTHRIL_LEGGINGS = registerItem("mythril_leggings",
+                    new Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(30)))),
+     MYTHRIL_LEGGINGS = registerItem("mythril_leggings",
             new ModArmorItem(ModArmorMaterials.MYTHRIL, ArmorItem.Type.LEGGINGS,
-                    new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(30)).fireproof())),
+                    new Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(30)))),
      MYTHRIL_BOOTS = registerItem("mythril_boots",
             new ModArmorItem(ModArmorMaterials.MYTHRIL, ArmorItem.Type.BOOTS,
-                    new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(30)).fireproof())),
+                    new Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(30)))),
 
 
     // --- Zazum Items --- \\
 
-    ZAZUM_INGOT = registerItem("zazum_ingot", new Item(new Item.Settings().rarity(Rarity.UNCOMMON))),
+     ZAZUM_INGOT = registerItem("zazum_ingot", new Item(new Item.Settings().rarity(Rarity.UNCOMMON))),
+
+    // Zazum Tools (will change attribute modifiers later)
+     ZAZUM_SWORD = registerItem("zazum_sword", 
+                new ModSwordItem(ModToolMaterials.ZAZUM, new Item.Settings()
+                        .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.ZAZUM, 0, 0)).rarity(Rarity.UNCOMMON))),
+
+     ZAZUM_PICKAXE = registerItem("zazum_pickaxe", 
+                new ModPickaxeItem(ModToolMaterials.ZAZUM, new Item.Settings()
+                        .attributeModifiers(PickaxeItem.createAttributeModifiers(ModToolMaterials.ZAZUM, 0, 0)).rarity(Rarity.UNCOMMON))),
+
+     ZAZUM_AXE = registerItem("zazum_axe", 
+                new ModAxeItem(ModToolMaterials.ZAZUM, new Item.Settings()
+                        .attributeModifiers(AxeItem.createAttributeModifiers(ModToolMaterials.ZAZUM, 0, 0)).rarity(Rarity.UNCOMMON))),
+
+     ZAZUM_SHOVEL = registerItem("zazum_shovel", 
+                new ModShovelItem(ModToolMaterials.ZAZUM, new Item.Settings()
+                        .attributeModifiers(ShovelItem.createAttributeModifiers(ModToolMaterials.ZAZUM, 0, 0)).rarity(Rarity.UNCOMMON))),
+
+     ZAZUM_HOE = registerItem("zazum_hoe", 
+                new ModHoeItem(ModToolMaterials.ZAZUM, new Item.Settings()
+                        .attributeModifiers(HoeItem.createAttributeModifiers(ModToolMaterials.ZAZUM, 0, 0)).rarity(Rarity.UNCOMMON))),
+
+    // Zazum Armor (will change max damage later)
+     ZAZUM_HELMET = registerItem("zazum_helmet",
+            new ModArmorItem(ModArmorMaterials.ZAZUM, ArmorItem.Type.HELMET,
+                    new Item.Settings().maxDamage(0).rarity(Rarity.UNCOMMON))),
+
+     ZAZUM_CHESTPLATE = registerItem("zazum_chestplate",
+            new ModArmorItem(ModArmorMaterials.ZAZUM, ArmorItem.Type.CHESTPLATE,
+                    new Item.Settings().maxDamage(0).rarity(Rarity.UNCOMMON))),
+
+     ZAZUM_LEGGINGS = registerItem("zazum_leggings",
+            new ModArmorItem(ModArmorMaterials.ZAZUM, ArmorItem.Type.LEGGINGS,
+                    new Item.Settings().maxDamage(0).rarity(Rarity.UNCOMMON))),
+
+     ZAZUM_BOOTS = registerItem("zazum_boots",
+            new ModArmorItem(ModArmorMaterials.ZAZUM, ArmorItem.Type.BOOTS,
+                    new Item.Settings().maxDamage(0).rarity(Rarity.UNCOMMON))),
 
     // --- Special Items ---
      ASTRYLUNA_STAR = registerItem("astryluna_star", new AstrylunaStar(new Item.Settings().rarity(Rarity.EPIC))),

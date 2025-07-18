@@ -39,21 +39,22 @@ public class ConfigManager {
      * or is invalid, a new one is created with default settings.
      * Missing settings in an existing file are also added.
      */
-    public static void loadAndSyncConfig() {
+    public static void loadConfig() {
         /*
          * Configuration structure:
          * {
-         * "counter_settings": {
-         * "maxCounterValue": integer,
-         * "unchangeable_counters": ["counter_name1", "counter_name2"]
-         * },
-         * "ban_settings": {
-         * "affects_creative": boolean,
-         * "affects_operators": boolean,
-         * "banned_items": ["item_id1", "item_id2"]
-         * }
+         *   "counter_settings": {
+         *   "maxCounterValue": integer,
+         *   "unchangeable_counters": ["counter_name1", "counter_name2"]
+         *   },
+         *   "ban_settings": {
+         *     "affects_creative": boolean,
+         *     "affects_operators": boolean,
+         *     "banned_items": ["item_id1", "item_id2"]
+         *   }
          * }
          */
+
         // configDir is only used once (I'm pretty sure...?), so just use configDir instead of cD
         // And also, it *would* be pretty confusing if it was cD...
         File configDir = Paths.get("config").toFile();
@@ -90,21 +91,37 @@ public class ConfigManager {
             nS = true;
         }
 
+        nS = processConfig(config);
+
+        if (nS) {
+            try {
+                saveConfig(config);
+            } catch (IOException e) {
+                Arythings.LOGGER.error("Failed to save config: ", e);
+            }
+        }
+
+        CounterHelperUtil.applyConfig(mCV, uC);
+        Arythings.LOGGER.info("Configuration loaded successfully!");
+    }
+
+    private static boolean processConfig(JsonObject config) {
+        boolean nS = false;
+
         // Handling counter_settings, with mCV and uC being added. counterSettingsObj -> cSO
-        JsonObject cSO;
-        if (!config.has("counter_settings") || !config.get("counter_settings").isJsonObject()) {
+        JsonObject cSO = getJsonObject(config, "counter_settings");
+
+        if (cSO == null) {
             cSO = new JsonObject();
             config.add("counter_settings", cSO);
             nS = true;
-        } else {
-            cSO = config.getAsJsonObject("counter_settings");
-        }
+        } else cSO = config.get("counter_settings").getAsJsonObject();
 
-        if (!cSO.has("maxCounterValue")) {
-            cSO.addProperty("maxCounterValue", 32767);
+        if(cSO.has("maxCounterValue")) mCV = cSO.get("maxCounterValue").getAsInt();
+        else if(!cSO.has("maxCounterValue")) {
+            cSO.addProperty("maxCounterValue", 32767); 
             nS = true;
         }
-        mCV = cSO.get("maxCounterValue").getAsInt();
         Arythings.LOGGER.debug("Loading maxCounterValue: " + mCV);
 
         if (!cSO.has("unchangeable_counters") || !cSO.get("unchangeable_counters").isJsonArray()) {
@@ -112,86 +129,75 @@ public class ConfigManager {
             nS = true;
         }
 
-        // Find "netiamond" and "luzzantum" in config and add if not found; unchangeableCounterNamesArray -> ucNA 
-        JsonArray ucNA = cSO.getAsJsonArray("unchangeable_counters");
-        boolean foundNetiamond = false;
-        boolean foundLuzzantum = false;
-        for (JsonElement element : ucNA) {
-            if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
-                String countername = element.getAsString();
-                if ("netiamond".equals(countername)) {
-                    foundNetiamond = true;
-                }
-                if ("luzzantum".equals(countername)) {
-                    foundLuzzantum = true;
-                }
-            } else {
-                nS = true;
-            }
-        }
-        if (!foundNetiamond) {
-            ucNA.add("netiamond");
-            nS = true;
-        }
-        if (!foundLuzzantum) {
-            ucNA.add("luzzantum");
-            nS = true;
-        }
-
-        uC.clear();
-        ucNA.forEach(element -> {
-            if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
-                uC.add(element.getAsString());
-            }
-        });
-
         // banSettingsObj -> bSO
-        JsonObject bSO;
-        if (!config.has("ban_settings") || !config.get("ban_settings").isJsonObject()) {
+        JsonObject bSO = getJsonObject(config, "ban_settings");
+        if(bSO == null) {
             bSO = new JsonObject();
             config.add("ban_settings", bSO);
             nS = true;
-        } else {
-            bSO = config.getAsJsonObject("ban_settings");
-        }
+        } else bSO = config.get("ban_settings").getAsJsonObject();
 
+        // Add if 'affects_creative' is not in the config (default is true)
         if (!bSO.has("affects_creative")) {
             bSO.addProperty("affects_creative", true);
             nS = true;
         }
-        aC = bSO.get("affects_creative").getAsBoolean();
-        Arythings.LOGGER.debug("Loading affectsCreative: " + aC);
+        // Use config setting for 'affects_creative'
+        aC = bSO.has("affects_creative") ? bSO.get("affects_creative").getAsBoolean() : true;
+        Arythings.LOGGER.debug("Loading affects_creative: " + aC);
 
+        // Add if 'affects_operators' is not in the config (default is false)
         if (!bSO.has("affects_operators")) {
             bSO.addProperty("affects_operators", false);
             nS = true;
         }
-        aO = bSO.get("affects_operators").getAsBoolean();
-        Arythings.LOGGER.debug("Loading affectsOperators: " + aO);
+        // Use config setting for 'affects_operators'
+        aO = bSO.has("affects_operators") ? bSO.get("affects_operators").getAsBoolean() : false;
+        Arythings.LOGGER.debug("Loading affects_operators: " + aO);
 
-
-        if (!bSO.has("banned_items") || !bSO.get("banned_items").isJsonArray()) {
+        bI.clear();
+        JsonArray bIArray = getJsonArray(bSO, "banned_items");
+        // Add if 'bIArray' is null
+        if(bIArray == null) {
             bSO.add("banned_items", new JsonArray());
             nS = true;
         }
-
-        bI.clear();
-        JsonArray bIArray = bSO.getAsJsonArray("banned_items");
-        for (JsonElement element : bIArray) {
-            if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
-                bI.add(element.getAsString());
-            } else {
-                nS = true;
+        // If 'bIArray' exists, then it will continue to the else,
+        // which adds the banned items to the config.
+        else {
+            for (JsonElement element : bIArray) {
+                if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+                    bI.add(element.getAsString());
+                } else {
+                    nS = true;
+                }
             }
-        }
-        Arythings.LOGGER.debug("Loading banned_items count: " + bI.size());
-
-        if (nS) {
-            saveConfig(config);
+            Arythings.LOGGER.debug("Loading banned_items count: " + bI.size());
         }
 
-        CounterHelperUtil.applyConfig(mCV, uC);
-        Arythings.LOGGER.info("Configuration loaded successfully!");
+        return nS;
+    }
+    
+    /**
+     * Helper method to safely retrieve a JsonObject from a parent JsonObject.
+     * @param parent The parent JsonObject.
+     * @param key The key for the JsonObject to retrieve.
+     * @return The JsonObject if it exists and is a JsonObject, otherwise null.
+     */
+    private static JsonObject getJsonObject(JsonObject parent, String key) {
+        if(parent.has(key) && parent.get(key).isJsonObject()) return parent.getAsJsonObject(key);
+        else return null;
+    }
+
+    /**
+     * Helper method to safely retrieve a JsonArray from a parent JsonObject.
+     * @param parent The parent JsonObject.
+     * @param key The key for the JsonArray to retrieve.
+     * @return The JsonArray if it exists and is a JsonArray, otherwise null.
+     */
+    private static JsonArray getJsonArray(JsonObject parent, String key) {
+        if(parent.has(key) && parent.get(key).isJsonArray()) return parent.getAsJsonArray(key);
+        else return null;
     }
 
     /**
@@ -243,7 +249,9 @@ public class ConfigManager {
         bSO.add("banned_items", bIA);
         rO.add("ban_settings", bSO);
 
-        saveConfig(rO);
+        try {
+            saveConfig(rO);
+        } catch (IOException e) {Arythings.LOGGER.error("Failed to save config: ", e);}
     }
 
     /**
@@ -259,7 +267,7 @@ public class ConfigManager {
      * Retrieves the setting for whether banned items affect operators.
      * @return True if banned items affect operators by default, false otherwise.
      */
-    public static boolean getDefaultAffectsOperators() {
+    public static boolean getAffectsOperators() {
         return aO;
     }
 
@@ -267,7 +275,7 @@ public class ConfigManager {
      * Retrieves the setting for whether banned items affect creative players.
      * @return True if banned items affect creative players by default, false otherwise.
      */
-    public static boolean getDefaultAffectsCreative() {
+    public static boolean getAffectsCreative() {
         return aC;
     }
 
@@ -290,15 +298,12 @@ public class ConfigManager {
     /**
      * Internal helper to save the given JsonObject to the config file.
      * @param config The JsonObject representing the entire mod configuration.
+     * @throws IOException 
      */
-    private static void saveConfig(JsonObject config) {
+    private static void saveConfig(JsonObject config) throws IOException {
         // This 'File' configFile is an exception (no need for cF),
         // Because configFile is only used for Files.write in this method. a.k.a, it *should* be fine
         File configFile = Paths.get("config", CONFIG).toFile();
-        try {
-            Files.write(configFile.toPath(), GSON.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (IOException e) {
-            Arythings.LOGGER.debug("Error: ", e);
-        }
+        Files.write(configFile.toPath(), GSON.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 }

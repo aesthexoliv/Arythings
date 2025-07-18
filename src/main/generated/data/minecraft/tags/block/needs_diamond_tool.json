@@ -8,6 +8,9 @@
     "arythings:netiamond_block",
     "arythings:lumit_block",
     "arythings:lumit_ore",
-    "arythings:deepslate_lumit_ore"
+    "arythings:deepslate_lumit_ore",
+    "arythings:zazum_block",
+    "arythings:zazum_ore",
+    "arythings:deepslate_zazum_ore"
   ]
 }

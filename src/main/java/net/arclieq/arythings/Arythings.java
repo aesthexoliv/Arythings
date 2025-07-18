@@ -3,6 +3,7 @@ package net.arclieq.arythings;
 import net.arclieq.arythings.block.ModBlocks;
 import net.arclieq.arythings.item.ModItemGroups;
 import net.arclieq.arythings.item.ModItems;
+import net.arclieq.arythings.item.custom.UpgradedMace;
 import net.arclieq.arythings.util.CounterHelperUtil;
 import net.arclieq.arythings.util.ConfigManager;
 import net.arclieq.arythings.util.CounterHelperUtil.CounterMode;
@@ -10,11 +11,16 @@ import net.arclieq.arythings.world.gen.ModWorldGeneration;
 import net.arclieq.arythings.command.ModCommands;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -34,11 +40,18 @@ public class Arythings implements ModInitializer {
     // Last changed: 30/06/2025
     /* TODO LIST:
      * - Add custom enchants (25/07/2025)
-     * - Add upgraded mace usages (01/08/2025)
-     * - Add luzzantum right click methods (01/08/2025)
      * - Create custom structures (01/08/2025)
+     * 
+     * - Fix: Upgraded Mace lives not working & not flinging you up, nerf/buff armor and tools, 
+     *   fix upgraded items not able to have own tooltip
+     * 
+     * - Add Upgraded Luzzantum Hoe texture (01/08/2025) (currently doing)
      * - Add Upgraded Lumit tool textures (01/08/2025)
-     * - Add Zazum textures (01/08/2025)
+     * 
+     * - Add right click usages/when holding in hand usage for upgraded versions 
+     *   of material in ModHoeItem, ModAxeItem, etc (Luzzantum and INCLUDING Lumit material) (01/08/2025)
+     * 
+     * - Add Zazum tool attribute modifiers, armor max damage, and textures (01/08/2025)
      * - Add nether ore textures, upgraded mace textures, new ores, blocks, and items textures (01/08/2025)
      */
 
@@ -51,31 +64,44 @@ public class Arythings implements ModInitializer {
         GREEN = Formatting.GREEN,
         RED = Formatting.RED,
         AQUA = Formatting.AQUA;
-
-    // Counter for periodic tick data saving
+    
     private int tickSaveCounter = 0;
 
     @Override public void onInitialize() {loadMod();}
 
     /**
-     * Loads the WHOLE mod, from config to registries.
+     * Loads the mod, from config, events, then to registries.
      */
     private void loadMod() {
         LOGGER.info("Loading mod, please wait!");
-        
-        // Load all configurations from a single, unified method
-        ConfigManager.loadAndSyncConfig();
+        ConfigManager.loadConfig();
 
-        // Register server lifecycle events
         LOGGER.info("Loading events, please wait.");
 
         ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
         ServerLifecycleEvents.SERVER_STOPPING.register(this::onServerStopping);
         ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
+        ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, f, f2, bool) -> {
+            if(entity instanceof ServerPlayerEntity player && player.isDead()) {
+                if(UpgradedMace.tryUseLives(source, player, entity.getWorld())) {
+                    // Play sound and particles
+                    entity.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                    
+                    ((ServerWorld)entity.getWorld()).spawnParticles(ParticleTypes.TOTEM_OF_UNDYING, 
+                    player.getX(), player.getY(), player.getZ(), 
+                    32, 0.5, 1.0, 0.5, 0.1);
+
+                    player.sendMessage(Text.literal("Upgraded Mace saved you! " + 
+                        CounterHelperUtil.getCounterValue(player.getUuid(), "lives", entity.getWorld().getServer()) 
+                        + " lives remain.").formatted(Arythings.GREEN), true);
+
+                }
+            }
+        });
 
         LOGGER.info("Loading mod context...");
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {ModCommands.registerCommands(dispatcher);});
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ModCommands.registerCommands(dispatcher));
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> onPlayerJoin(server, handler.getPlayer()));
 
         ModItems.registerModItems();
@@ -98,6 +124,8 @@ public class Arythings implements ModInitializer {
         Map<String, CounterMode> CM = new HashMap<>();
         CM.put("luzzantum", CounterMode.TICK);
         CM.put("netiamond", CounterMode.TICK);
+        CM.put("astryluna_upgrade", CounterMode.TICK);
+        CM.put("lives", CounterMode.MANUAL);
 
         for (Map<String, CounterHelperUtil.CounterData> playerCounters : CounterHelperUtil.getAllPlayerCounters().values()) {
             playerCounters.forEach((name, data) -> CM.put(name, data.mode));
@@ -111,7 +139,11 @@ public class Arythings implements ModInitializer {
             if (!CounterHelperUtil.hasCounter(uuid, counterName)) {
                 int valueToSet = 0;
                 if (knownMode == CounterMode.TICK) {
+                    if(counterName == "astryluna_upgrade") valueToSet = 2400;
                     valueToSet = defaultTickValue;
+                }
+                if (counterName == "lives") {
+                    CounterHelperUtil.setCounter(uuid, counterName, 2, knownMode, server);
                 }
                 CounterHelperUtil.setCounter(uuid, counterName, valueToSet, knownMode, server);
             }
@@ -141,6 +173,9 @@ public class Arythings implements ModInitializer {
      */
     private void onServerStopping(MinecraftServer server) {
         CounterHelperUtil.saveData(server);
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+            player.clearStatusEffects();
+        }
     }
 
     /**
@@ -155,8 +190,8 @@ public class Arythings implements ModInitializer {
                     String currentItemString = currentItemIdentifier.toString();
                     
                     if(ConfigManager.getBannedItems().contains(currentItemString)) {
-                        boolean affectsCreative = ConfigManager.getDefaultAffectsCreative();
-                        boolean affectsOperators = ConfigManager.getDefaultAffectsOperators();
+                        boolean affectsCreative = ConfigManager.getAffectsCreative();
+                        boolean affectsOperators = ConfigManager.getAffectsOperators();
 
 
                         boolean shouldRemove = true; // Assume removal unless conditions prevent it

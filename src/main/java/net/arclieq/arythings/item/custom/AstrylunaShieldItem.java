@@ -24,8 +24,8 @@ public class AstrylunaShieldItem extends ShieldItem {
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        tooltip.add(Text.literal("Created by combining a mythical star, lies this item.").formatted(Arythings.GRAY));
-        tooltip.add(Text.literal("This can protect you from your troubles and save you...").formatted(Arythings.GRAY));
+        tooltip.add(Text.literal("Created by combining an Astryluna Star.").formatted(Arythings.GRAY));
+        tooltip.add(Text.literal("This can block attacks stronger than a normal shield.").formatted(Arythings.GRAY));
         super.appendTooltip(stack, context, tooltip, type);
     }
     

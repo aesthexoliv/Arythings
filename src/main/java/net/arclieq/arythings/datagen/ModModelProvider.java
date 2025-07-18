@@ -30,6 +30,9 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LUMIT_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LUMIT_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DEEPSLATE_LUMIT_ORE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ZAZUM_BLOCK);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ZAZUM_ORE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DEEPSLATE_ZAZUM_ORE);
     }
 
     @Override
@@ -38,11 +41,15 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.UPGRADED_LUZZANTUM_PICKAXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.UPGRADED_LUZZANTUM_AXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.UPGRADED_LUZZANTUM_SHOVEL, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.UPGRADED_LUZZANTUM_HOE, Models.HANDHELD);
 
         itemModelGenerator.register(ModItems.UPGRADED_LUMIT_SWORD, Models.HANDHELD);
         itemModelGenerator.register(ModItems.UPGRADED_LUMIT_PICKAXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.UPGRADED_LUMIT_AXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.UPGRADED_LUMIT_SHOVEL, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.UPGRADED_LUMIT_HOE, Models.HANDHELD);
+
+        itemModelGenerator.register(ModItems.ASTRYLUNA_SHIELD, Models.HANDHELD);
         
         itemModelGenerator.register(ModItems.UPGRADED_MACE, Items.MACE, Models.HANDHELD_MACE);
 
@@ -71,6 +78,11 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.MYTHRIL_AXE, Models.HANDHELD);
         itemModelGenerator.register(ModItems.MYTHRIL_SHOVEL, Models.HANDHELD);
         itemModelGenerator.register(ModItems.MYTHRIL_HOE, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.ZAZUM_SWORD, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.ZAZUM_PICKAXE, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.ZAZUM_AXE, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.ZAZUM_SHOVEL, Models.HANDHELD);
+        itemModelGenerator.register(ModItems.ZAZUM_HOE, Models.HANDHELD);
 
         itemModelGenerator.register(ModItems.BROKEN_LUZZANTUM_HELMET, Models.GENERATED);
         itemModelGenerator.register(ModItems.BROKEN_LUZZANTUM_CHESTPLATE, Models.GENERATED);
@@ -96,6 +108,10 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.registerArmor((ArmorItem)ModItems.MYTHRIL_CHESTPLATE);
         itemModelGenerator.registerArmor((ArmorItem)ModItems.MYTHRIL_LEGGINGS);
         itemModelGenerator.registerArmor((ArmorItem)ModItems.MYTHRIL_BOOTS);
+        itemModelGenerator.registerArmor((ArmorItem)ModItems.ZAZUM_HELMET);
+        itemModelGenerator.registerArmor((ArmorItem)ModItems.ZAZUM_CHESTPLATE);
+        itemModelGenerator.registerArmor((ArmorItem)ModItems.ZAZUM_LEGGINGS);
+        itemModelGenerator.registerArmor((ArmorItem)ModItems.ZAZUM_BOOTS);
     }
     
 }

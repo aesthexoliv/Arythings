@@ -16,8 +16,17 @@
     "arythings:lumit_axe",
     "arythings:lumit_shovel",
     "arythings:lumit_hoe",
+    "arythings:zazum_pickaxe",
+    "arythings:zazum_axe",
+    "arythings:zazum_shovel",
+    "arythings:zazum_hoe",
     "arythings:upgraded_luzzantum_pickaxe",
     "arythings:upgraded_luzzantum_axe",
-    "arythings:upgraded_luzzantum_shovel"
+    "arythings:upgraded_luzzantum_shovel",
+    "arythings:upgraded_luzzantum_hoe",
+    "arythings:upgraded_lumit_pickaxe",
+    "arythings:upgraded_lumit_axe",
+    "arythings:upgraded_lumit_shovel",
+    "arythings:upgraded_lumit_hoe"
   ]
 }

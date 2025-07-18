@@ -18,9 +18,10 @@ import java.util.concurrent.CompletableFuture;
 public class BanItemCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+        
         // Register /banitem
         dispatcher.register(CommandManager.literal("banitem")
-            .requires(source -> source.hasPermissionLevel(4)) // High permission level for a destructive command
+            .requires(source -> source.hasPermissionLevel(4))
             .then(CommandManager.argument("item", IdentifierArgumentType.identifier()).suggests(BanItemCommand::suggestBannableItems)
                 .executes(context -> {
                     Identifier itemId = IdentifierArgumentType.getIdentifier(context, "item");
@@ -59,25 +60,30 @@ public class BanItemCommand {
 
                     // If not banned item:
                     if(!banned && itemExists) {
-                        context.getSource().sendError(Text.literal("Item '" + itemId.toString().formatted(Formatting.YELLOW) + "' is not banned!"));
+                        context.getSource().sendError(Text.literal("Item '" + 
+                            itemId.toString().formatted(Formatting.YELLOW) + "' is not banned!"));
                         return 0;
                     }
 
                     // Banned item found in config, registry item not found.
                     if(banned && !itemExists) {
-                        context.getSource().sendError(Text.literal("Error: Item '" + itemId.toString().formatted(Formatting.YELLOW) + "' not found ingame!"));
+                        context.getSource().sendError(Text.literal("Error: Item '" + 
+                            itemId.toString().formatted(Formatting.YELLOW) + "' not found ingame!"));
                         return 0;
                     }
 
                     // NOT banned item, NOT an ingame item.
                     if(!banned && !itemExists) {
-                        context.getSource().sendError(Text.literal("Error: Item '" + itemId.toString() + "' not found and not banned!"));
+                        context.getSource().sendError(Text.literal("Error: Item '" + 
+                            itemId.toString() + "' not found and not banned!"));
                         return 0;
                     }
 
                     // Banned item unban:
                     ConfigManager.removeBannedItem(itemId.toString());
-                    context.getSource().sendFeedback(() -> Text.literal("Item '").append(Text.literal(itemId.toString()).formatted(Formatting.GREEN)).append("' is no longer banned."), true);
+                    context.getSource().sendFeedback(() -> Text.literal("Item '")
+                        .append(Text.literal(itemId.toString()).formatted(Formatting.GREEN))
+                        .append("' is no longer banned."), true);
                     return 1;
                 })
             )

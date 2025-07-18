@@ -79,10 +79,18 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         // Upgrading recipes & fixing broken items & smithing recipe
 
         offerAstrylunaSmithingRecipe(exporter, Items.MACE, RecipeCategory.MISC, ModItems.UPGRADED_MACE, Items.HEAVY_CORE);
+
         offerAstrylunaSmithingRecipe(exporter, ModItems.LUZZANTUM_SWORD, RecipeCategory.MISC, ModItems.UPGRADED_LUZZANTUM_SWORD, lz);
         offerAstrylunaSmithingRecipe(exporter, ModItems.LUZZANTUM_PICKAXE, RecipeCategory.MISC, ModItems.UPGRADED_LUZZANTUM_PICKAXE, lz);
         offerAstrylunaSmithingRecipe(exporter, ModItems.LUZZANTUM_AXE, RecipeCategory.MISC, ModItems.UPGRADED_LUZZANTUM_AXE, lz);
         offerAstrylunaSmithingRecipe(exporter, ModItems.LUZZANTUM_SHOVEL, RecipeCategory.MISC, ModItems.UPGRADED_LUZZANTUM_SHOVEL, lz);
+        offerAstrylunaSmithingRecipe(exporter, ModItems.LUZZANTUM_HOE, RecipeCategory.MISC, ModItems.UPGRADED_LUZZANTUM_HOE, lz);
+
+        offerAstrylunaSmithingRecipe(exporter, ModItems.LUMIT_SWORD, RecipeCategory.MISC, ModItems.UPGRADED_LUMIT_SWORD, lm);
+        offerAstrylunaSmithingRecipe(exporter, ModItems.LUMIT_PICKAXE, RecipeCategory.MISC, ModItems.UPGRADED_LUMIT_PICKAXE, lm);
+        offerAstrylunaSmithingRecipe(exporter, ModItems.LUMIT_AXE, RecipeCategory.MISC, ModItems.UPGRADED_LUMIT_AXE, lm);
+        offerAstrylunaSmithingRecipe(exporter, ModItems.LUMIT_SHOVEL, RecipeCategory.MISC, ModItems.UPGRADED_LUMIT_SHOVEL, lm);
+        offerAstrylunaSmithingRecipe(exporter, ModItems.LUMIT_HOE, RecipeCategory.MISC, ModItems.UPGRADED_LUMIT_HOE, lm);
 
         offerAstrylunaSmithingRecipe(exporter, ModItems.BROKEN_LUZZANTUM_HELMET, RecipeCategory.MISC, ModItems.LUZZANTUM_HELMET, lz);
         offerAstrylunaSmithingRecipe(exporter, ModItems.BROKEN_LUZZANTUM_CHESTPLATE, RecipeCategory.MISC, ModItems.LUZZANTUM_CHESTPLATE, lz);

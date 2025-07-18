@@ -4,7 +4,7 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ArythingsMixin",
-		"ArythingsMixin$MaceMixin",
+		"ArythingsMixin$ItemMixin",
 		"ArythingsMixin$PlayerEntityMixin",
 		"ArythingsMixin$GiveCommandMixin"
 	],

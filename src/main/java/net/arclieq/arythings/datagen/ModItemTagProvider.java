@@ -21,6 +21,7 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(ItemTags.MACE_ENCHANTABLE).add(ModItems.UPGRADED_MACE);
         getOrCreateTagBuilder(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.UPGRADED_MACE).add(ModItems.ASTRYLUNA_SHIELD);
         getOrCreateTagBuilder(ItemTags.FIRE_ASPECT_ENCHANTABLE).add(ModItems.UPGRADED_MACE);
+
         // Trimmable armor
         getOrCreateTagBuilder(ItemTags.TRIMMABLE_ARMOR)
         .add(ModItems.NETIAMOND_HELMET)
@@ -38,7 +39,12 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
         .add(ModItems.LUMIT_HELMET)
         .add(ModItems.LUMIT_CHESTPLATE)
         .add(ModItems.LUMIT_LEGGINGS)
-        .add(ModItems.LUMIT_BOOTS);
+        .add(ModItems.LUMIT_BOOTS)
+        .add(ModItems.ZAZUM_HELMET)
+        .add(ModItems.ZAZUM_CHESTPLATE)
+        .add(ModItems.ZAZUM_LEGGINGS)
+        .add(ModItems.ZAZUM_BOOTS);
+
         // Tools enchants
         getOrCreateTagBuilder(ItemTags.MINING_ENCHANTABLE)
         .add(ModItems.NETIAMOND_PICKAXE)
@@ -57,9 +63,19 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
         .add(ModItems.LUMIT_AXE)
         .add(ModItems.LUMIT_SHOVEL)
         .add(ModItems.LUMIT_HOE)
+        .add(ModItems.ZAZUM_PICKAXE)
+        .add(ModItems.ZAZUM_AXE)
+        .add(ModItems.ZAZUM_SHOVEL)
+        .add(ModItems.ZAZUM_HOE)
         .add(ModItems.UPGRADED_LUZZANTUM_PICKAXE)
         .add(ModItems.UPGRADED_LUZZANTUM_AXE)
-        .add(ModItems.UPGRADED_LUZZANTUM_SHOVEL);
+        .add(ModItems.UPGRADED_LUZZANTUM_SHOVEL)
+        .add(ModItems.UPGRADED_LUZZANTUM_HOE)
+        .add(ModItems.UPGRADED_LUMIT_PICKAXE)
+        .add(ModItems.UPGRADED_LUMIT_AXE)
+        .add(ModItems.UPGRADED_LUMIT_SHOVEL)
+        .add(ModItems.UPGRADED_LUMIT_HOE);
+
         // Weapons enchants
         getOrCreateTagBuilder(ItemTags.WEAPON_ENCHANTABLE)
         .add(ModItems.NETIAMOND_SWORD)
@@ -70,61 +86,110 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
         .add(ModItems.MYTHRIL_AXE)
         .add(ModItems.LUMIT_SWORD)
         .add(ModItems.LUMIT_AXE)
+        .add(ModItems.ZAZUM_SWORD)
+        .add(ModItems.ZAZUM_AXE)
         .add(ModItems.UPGRADED_LUZZANTUM_SWORD)
         .add(ModItems.UPGRADED_LUZZANTUM_AXE)
+        .add(ModItems.UPGRADED_LUMIT_SWORD)
+        .add(ModItems.UPGRADED_LUMIT_AXE)
         .add(ModItems.UPGRADED_MACE);
+        
         // Sword enchants
-        getOrCreateTagBuilder(ItemTags.SWORD_ENCHANTABLE).add(ModItems.NETIAMOND_SWORD).add(ModItems.LUZZANTUM_SWORD);
-        // Other
-        getOrCreateTagBuilder(ItemTags.SWORDS).add(ModItems.NETIAMOND_SWORD).add(ModItems.LUZZANTUM_SWORD).add(ModItems.MYTHRIL_SWORD).add(ModItems.LUMIT_SWORD);
-        getOrCreateTagBuilder(ItemTags.PICKAXES).add(ModItems.NETIAMOND_PICKAXE).add(ModItems.LUZZANTUM_PICKAXE).add(ModItems.MYTHRIL_PICKAXE).add(ModItems.LUMIT_PICKAXE);
-        getOrCreateTagBuilder(ItemTags.AXES).add(ModItems.NETIAMOND_AXE).add(ModItems.LUZZANTUM_AXE).add(ModItems.MYTHRIL_AXE).add(ModItems.LUMIT_AXE);
-        getOrCreateTagBuilder(ItemTags.SHOVELS).add(ModItems.NETIAMOND_SHOVEL).add(ModItems.LUZZANTUM_SHOVEL).add(ModItems.MYTHRIL_SHOVEL).add(ModItems.LUMIT_SHOVEL);
-        getOrCreateTagBuilder(ItemTags.HOES).add(ModItems.NETIAMOND_HOE).add(ModItems.LUZZANTUM_HOE).add(ModItems.MYTHRIL_HOE).add(ModItems.LUMIT_HOE);
+        getOrCreateTagBuilder(ItemTags.SWORD_ENCHANTABLE)
+        .add(ModItems.NETIAMOND_SWORD)
+        .add(ModItems.LUZZANTUM_SWORD)
+        .add(ModItems.LUMIT_SWORD)
+        .add(ModItems.MYTHRIL_SWORD)
+        .add(ModItems.ZAZUM_SWORD);
 
+        // Other
+        getOrCreateTagBuilder(ItemTags.SWORDS)
+        .add(ModItems.NETIAMOND_SWORD)
+        .add(ModItems.LUZZANTUM_SWORD)
+        .add(ModItems.MYTHRIL_SWORD)
+        .add(ModItems.LUMIT_SWORD)
+        .add(ModItems.ZAZUM_SWORD);
+
+        getOrCreateTagBuilder(ItemTags.PICKAXES)
+        .add(ModItems.NETIAMOND_PICKAXE)
+        .add(ModItems.LUZZANTUM_PICKAXE)
+        .add(ModItems.MYTHRIL_PICKAXE)
+        .add(ModItems.LUMIT_PICKAXE)
+        .add(ModItems.ZAZUM_PICKAXE);
+
+        getOrCreateTagBuilder(ItemTags.AXES)
+        .add(ModItems.NETIAMOND_AXE)
+        .add(ModItems.LUZZANTUM_AXE)
+        .add(ModItems.MYTHRIL_AXE)
+        .add(ModItems.LUMIT_AXE)
+        .add(ModItems.ZAZUM_AXE);
+
+        getOrCreateTagBuilder(ItemTags.SHOVELS)
+        .add(ModItems.NETIAMOND_SHOVEL)
+        .add(ModItems.LUZZANTUM_SHOVEL)
+        .add(ModItems.MYTHRIL_SHOVEL)
+        .add(ModItems.LUMIT_SHOVEL)
+        .add(ModItems.ZAZUM_SHOVEL);
+
+        getOrCreateTagBuilder(ItemTags.HOES)
+        .add(ModItems.NETIAMOND_HOE)
+        .add(ModItems.LUZZANTUM_HOE)
+        .add(ModItems.MYTHRIL_HOE)
+        .add(ModItems.LUMIT_HOE)
+        .add(ModItems.ZAZUM_HOE);
+
+        // Armor tags & enchant tags
         getOrCreateTagBuilder(ItemTags.HEAD_ARMOR)
         .add(ModItems.NETIAMOND_HELMET)
         .add(ModItems.LUZZANTUM_HELMET)
         .add(ModItems.MYTHRIL_HELMET)
-        .add(ModItems.LUMIT_HELMET);
+        .add(ModItems.LUMIT_HELMET)
+        .add(ModItems.ZAZUM_HELMET);
         getOrCreateTagBuilder(ItemTags.HEAD_ARMOR_ENCHANTABLE)
         .add(ModItems.NETIAMOND_HELMET)
         .add(ModItems.LUZZANTUM_HELMET)
         .add(ModItems.MYTHRIL_HELMET)
-        .add(ModItems.LUMIT_HELMET);
+        .add(ModItems.LUMIT_HELMET)
+        .add(ModItems.ZAZUM_HELMET);
 
         getOrCreateTagBuilder(ItemTags.CHEST_ARMOR)
         .add(ModItems.NETIAMOND_CHESTPLATE)
         .add(ModItems.LUZZANTUM_CHESTPLATE)
         .add(ModItems.MYTHRIL_CHESTPLATE)
-        .add(ModItems.LUMIT_CHESTPLATE);
+        .add(ModItems.LUMIT_CHESTPLATE)
+        .add(ModItems.ZAZUM_CHESTPLATE);
         getOrCreateTagBuilder(ItemTags.CHEST_ARMOR_ENCHANTABLE)
         .add(ModItems.NETIAMOND_CHESTPLATE)
         .add(ModItems.LUZZANTUM_CHESTPLATE)
         .add(ModItems.MYTHRIL_CHESTPLATE)
-        .add(ModItems.LUMIT_CHESTPLATE);
+        .add(ModItems.LUMIT_CHESTPLATE)
+        .add(ModItems.ZAZUM_CHESTPLATE);
 
         getOrCreateTagBuilder(ItemTags.LEG_ARMOR)
         .add(ModItems.NETIAMOND_LEGGINGS)
         .add(ModItems.LUZZANTUM_LEGGINGS)
         .add(ModItems.MYTHRIL_LEGGINGS)
-        .add(ModItems.LUMIT_LEGGINGS);
+        .add(ModItems.LUMIT_LEGGINGS)
+        .add(ModItems.ZAZUM_LEGGINGS);
         getOrCreateTagBuilder(ItemTags.LEG_ARMOR_ENCHANTABLE)
         .add(ModItems.NETIAMOND_LEGGINGS)
         .add(ModItems.LUZZANTUM_LEGGINGS)
         .add(ModItems.MYTHRIL_LEGGINGS)
-        .add(ModItems.LUMIT_LEGGINGS);
+        .add(ModItems.LUMIT_LEGGINGS)
+        .add(ModItems.ZAZUM_LEGGINGS);
 
         getOrCreateTagBuilder(ItemTags.FOOT_ARMOR)
         .add(ModItems.NETIAMOND_BOOTS)
         .add(ModItems.LUZZANTUM_BOOTS)
         .add(ModItems.MYTHRIL_BOOTS)
-        .add(ModItems.LUMIT_BOOTS);
+        .add(ModItems.LUMIT_BOOTS)
+        .add(ModItems.ZAZUM_BOOTS);
         getOrCreateTagBuilder(ItemTags.FOOT_ARMOR_ENCHANTABLE)
         .add(ModItems.NETIAMOND_BOOTS)
         .add(ModItems.LUZZANTUM_BOOTS)
         .add(ModItems.MYTHRIL_BOOTS)
-        .add(ModItems.LUMIT_BOOTS);
+        .add(ModItems.LUMIT_BOOTS)
+        .add(ModItems.ZAZUM_BOOTS);
 
         getOrCreateTagBuilder(ModTags.Items.TRANSFORMABLE_ITEMS)
         .add(Items.DIAMOND);
@@ -133,7 +198,8 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
         .add(ModItems.LUZZANTUM_INGOT)
         .add(ModItems.MYTHRIL_INGOT)
         .add(ModItems.LUMIT_SHARD)
-        .add(ModItems.ZAZUM_INGOT);
+        .add(ModItems.ZAZUM_INGOT)
+        .add(ModItems.ASTRYLUNA_STAR);
     }
     
 }

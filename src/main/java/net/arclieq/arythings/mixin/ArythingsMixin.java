@@ -1,6 +1,7 @@
 package net.arclieq.arythings.mixin;
 
 import net.arclieq.arythings.Arythings;
+import net.arclieq.arythings.item.ModItems;
 import net.arclieq.arythings.item.custom.AstrylunaShieldItem;
 import net.arclieq.arythings.item.custom.UpgradedMace;
 import net.arclieq.arythings.util.ConfigManager;
@@ -12,10 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.GiveCommand;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import net.minecraft.item.Item;
 import net.minecraft.item.MaceItem;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.registry.Registries;
 import net.minecraft.command.argument.ItemStackArgument;
@@ -40,7 +41,7 @@ public class ArythingsMixin {
 	private void init(CallbackInfo info) {
 		Arythings.LOGGER.info("Loading " + Arythings.MOD_ID + "...");
 		ModWorldGeneration.generateModWorldGen();
-        ConfigManager.loadAndSyncConfig();
+        ConfigManager.loadConfig();
 		Arythings.LOGGER.info("Finished!");
 	}
 
@@ -56,10 +57,13 @@ public class ArythingsMixin {
             ItemStack activeItem = this.getActiveItem();
             if(activeItem.getItem() instanceof AstrylunaShieldItem) {
                 ci.cancel();
-                if(attacker instanceof PlayerEntity) {
-                    PlayerEntity player = (PlayerEntity) attacker;
-                    player.sendMessage(Text.literal("You are protected by the Astryluna Shield!").formatted(Formatting.GREEN), true);
+                ((PlayerEntity)(Object)this).sendMessage(Text.literal("Attack blocked by the Astryluna Shield!").formatted(Arythings.GREEN), true);
+                if(attacker instanceof PlayerEntity player) {
+                    player.sendMessage(Text.literal("You cannot break this player's shield!").formatted(Arythings.RED), true);
                 }
+            }
+            else if (activeItem.getItem() instanceof ShieldItem && attacker.getStackInHand(attacker.getActiveHand()).getItem() == ModItems.UPGRADED_MACE){
+                ((PlayerEntity)(Object)this).disableShield();
             }
         }
     }
@@ -75,8 +79,8 @@ public class ArythingsMixin {
             String stringId = itemId.toString();
 
             if(ConfigManager.getBannedItems().contains(stringId)) {
-                boolean aC = ConfigManager.getDefaultAffectsCreative();
-                boolean aO = ConfigManager.getDefaultAffectsOperators();
+                boolean aC = ConfigManager.getAffectsCreative();
+                boolean aO = ConfigManager.getAffectsOperators();
 
                 for (ServerPlayerEntity target : targets) {
                     boolean ban = true;
@@ -101,11 +105,12 @@ public class ArythingsMixin {
 
     // Item mixin. Used for appending a tooltip to MaceItem (NOT for UpgradedMace, even though it extends MaceItem)
 	@Mixin(Item.class)
-    public static class MaceMixin {
+    public static class ItemMixin {
     @Inject(method = "appendTooltip", at = @At("TAIL"))
     private void arythings$appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type, CallbackInfo info) {
-        if((Object)this instanceof MaceItem != (Object)this instanceof UpgradedMace) {
-            tooltip.add(Text.literal("Can be upgraded...").formatted(Formatting.BLUE));
+        if((Object)this instanceof MaceItem != (Object)this instanceof UpgradedMace 
+            || (Object)this instanceof ShieldItem != (Object)this instanceof AstrylunaShieldItem) {
+            tooltip.add(Text.literal("Can be upgraded with an Astryluna Star.").formatted(Arythings.GRAY));
         }
     }
 }

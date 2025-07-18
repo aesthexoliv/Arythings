@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import net.arclieq.arythings.Arythings;
 import net.arclieq.arythings.item.ModArmorMaterials;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -17,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
 public class ModArmorItem extends ArmorItem {
@@ -110,15 +111,16 @@ private static final Map<RegistryEntry<ArmorMaterial>, List<StatusEffectInstance
     }
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        Formatting formatAqua = Formatting.AQUA;
+        if(Screen.hasShiftDown()) {
         if(this.getMaterial() == ModArmorMaterials.LUZZANTUM) {
-            tooltip.add(Text.literal("Full set bonus: Resistance I, Strength I").formatted(formatAqua));
+            tooltip.add(Text.literal("Full set bonus: Resistance I, Strength I").formatted(Arythings.AQUA));
         } else if(this.getMaterial() == ModArmorMaterials.MYTHRIL) {
-            tooltip.add(Text.literal("Full set bonus: Regeneration I").formatted(formatAqua));
+            tooltip.add(Text.literal("Full set bonus: Regeneration I").formatted(Arythings.AQUA));
         } else if(this.getMaterial() == ModArmorMaterials.LUMIT) {
-            tooltip.add(Text.literal("Full set bonus: Fire Resistance I, Regeneration II").formatted(formatAqua));
+            tooltip.add(Text.literal("Full set bonus: Fire Resistance I, Regeneration II").formatted(Arythings.AQUA));
         } else if(this.getMaterial() == ModArmorMaterials.NETIAMOND) {
-            tooltip.add(Text.literal("Full set bonus: Speed I, Resistance II, +2 extra hearts").formatted(formatAqua));
+            tooltip.add(Text.literal("Full set bonus: Speed I, Resistance II, +2 extra hearts").formatted(Arythings.AQUA));
+        }
         }
         super.appendTooltip(stack, context, tooltip, type);
     }
